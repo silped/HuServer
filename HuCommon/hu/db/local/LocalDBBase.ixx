@@ -1,0 +1,121 @@
+﻿export module hu.db.local.LocalDBBase;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: Import (LocalDBBase)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import <functional>;
+import <memory>;
+
+import hu.db.local.LocalDBConfig;
+import hu.db.local.LocalDBType;
+import hu.pattern.INoCopy;
+import hu.Type;
+
+
+namespace hu {
+
+// 로컬 디비 트랜잭션 소멸시 자동으로 롤백할지 검사하는 함수
+export using LocalDBCheckRollback = std::function<bool()>;
+
+// 로컬 디비 트랜잭션 구현체를 위한 기반 클래스
+export class LocalDBTransBase : private INoCopy
+{
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Constructor & Destructor (LocalDBTransBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+public:
+    explicit LocalDBTransBase(
+        const LocalDBConfigInfo&    config,
+        const LocalDBCheckRollback& check_rollback
+    ) :
+        config_         { config },
+        check_rollback_ { check_rollback }
+    {
+    }
+
+    virtual ~LocalDBTransBase()
+    {
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Public (LocalDBTransBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+public:
+    // 디비에 버퍼 값을 쓴다.
+    virtual bool Write(
+        const LocalDBKey& key,
+        const Buffer&     buffer
+    ) = 0;
+
+    // 디비에서 버퍼 값을 읽는다.
+    virtual bool Read(
+        const LocalDBKey& key,
+        Buffer&           buffer
+    ) = 0;
+
+    // 디비에서 버퍼 값을 삭제한다.
+    virtual bool Delete(
+        const LocalDBKey& key
+    ) = 0;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Protected (LocalDBTransBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+protected:
+    const LocalDBConfigInfo& config_;
+    LocalDBCheckRollback     check_rollback_;
+};
+
+// 로컬 디비 트랜잭션 구현체 포인터
+export using LocalDBTransPtr = std::unique_ptr<LocalDBTransBase>;
+
+// 로컬 디비 구현체를 위한 기반 클래스
+export class LocalDBBase : private INoCopy
+{
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Constructor & Destructor (LocalDBBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+public:
+    explicit LocalDBBase(
+        const LocalDBConfigInfo& config
+    ) :
+        config_ { config }
+    {
+    }
+
+    virtual ~LocalDBBase()
+    {
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Public (LocalDBBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+public:
+    // 디비를 열고 초기화한다.
+    virtual bool Open() = 0;
+
+    // 트랜잭션을 생성한다.
+    virtual LocalDBTransPtr CreateTrans(
+        const LocalDBCheckRollback& check_rollback
+    ) = 0;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Protected (LocalDBBase)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+protected:
+    const LocalDBConfigInfo& config_;
+};
+
+} // hu

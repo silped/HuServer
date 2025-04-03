@@ -1,0 +1,11 @@
+# dir
+.vs/
+_bin/
+_build/
+_doc/
+_external/
+
+# file
+*.vcxproj.filters.user
+*.vcxproj.user
+

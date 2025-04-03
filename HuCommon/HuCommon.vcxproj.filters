@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="hu">
+      <UniqueIdentifier>{4dff03c7-1ed3-40ea-94e4-b14cd64e7c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\test">
+      <UniqueIdentifier>{b9ccf897-821e-448e-9c22-7ee8b06c6e56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\pattern">
+      <UniqueIdentifier>{e431c346-27f9-40ca-a5e6-c2d0a0a9d95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\io">
+      <UniqueIdentifier>{ab35f6ab-05d9-4dea-a9e5-4a54429ea15b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\time">
+      <UniqueIdentifier>{1da2e529-edb9-4442-8847-0cc46c95457e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\container">
+      <UniqueIdentifier>{e87210ec-e43c-4100-93a9-f57cf95312ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\log">
+      <UniqueIdentifier>{3622ea21-385a-4cdd-96af-b035a4bc878b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\serial">
+      <UniqueIdentifier>{5706403c-3f28-49af-976e-f3445cd77b9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net">
+      <UniqueIdentifier>{c061097b-9612-4343-9d4e-0341efb943dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net\impl">
+      <UniqueIdentifier>{2fbe94ab-01a2-477d-9eab-7bb016687bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net\impl\asio">
+      <UniqueIdentifier>{3f2e18c9-e69d-4381-a8d9-c2cf99d72c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\container\impl">
+      <UniqueIdentifier>{53ad07f4-b5e7-42af-a612-7bf1185b5db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\log\impl">
+      <UniqueIdentifier>{4a150ae3-ad45-48cb-9d66-382ff8585e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\serial\impl">
+      <UniqueIdentifier>{c27cc8cd-167b-41ff-951f-f428c873f0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\test\echo">
+      <UniqueIdentifier>{bdabeb98-8079-410e-ad6b-93369277db44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\crypt">
+      <UniqueIdentifier>{09d92ca2-dd64-446d-b627-eda0dab4a84e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\rand">
+      <UniqueIdentifier>{708729f1-0d98-4334-aeee-08245edfcda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\crypt\impl">
+      <UniqueIdentifier>{151ae1b8-ce22-4797-9795-52c692b47cc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\test\chat">
+      <UniqueIdentifier>{a3f2d734-1547-48eb-bba3-b6f5ecf176cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\db">
+      <UniqueIdentifier>{76d7655c-9b1e-4b21-a9ae-7294c68fb0e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\db\local">
+      <UniqueIdentifier>{1d2c8ec5-7b97-493f-b700-163222d1e33f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\db\local\impl">
+      <UniqueIdentifier>{ec77c27e-c663-4910-952e-2155396e284c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\test\impl">
+      <UniqueIdentifier>{9b16a719-454a-4868-92af-848396fddfb5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="hu\test\TestStart.ixx">
+      <Filter>hu\test</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\Type.ixx">
+      <Filter>hu</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\pattern\ISingleton.ixx">
+      <Filter>hu\pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\pattern\ISingletonShare.ixx">
+      <Filter>hu\pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\io\Console.ixx">
+      <Filter>hu\io</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\time\Timer.ixx">
+      <Filter>hu\time</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\Util.ixx">
+      <Filter>hu</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\pattern\INoCopy.ixx">
+      <Filter>hu\pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\Log.ixx">
+      <Filter>hu\log</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\LogWriterBase.ixx">
+      <Filter>hu\log</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\AsyncLogWriterBase.ixx">
+      <Filter>hu\log</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\container\AutoQueueBase.ixx">
+      <Filter>hu\container</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\serial\Serializer.ixx">
+      <Filter>hu\serial</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\Server.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ServerBase.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\impl\asio\AsioRunner.ixx">
+      <Filter>hu\net\impl\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\impl\asio\AsioType.ixx">
+      <Filter>hu\net\impl\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\container\impl\LockFreeAutoQueue.ixx">
+      <Filter>hu\container\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\container\impl\MpscAutoQueue.ixx">
+      <Filter>hu\container\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\impl\ConsoleLogWriter.ixx">
+      <Filter>hu\log\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\impl\FileLogWriter.ixx">
+      <Filter>hu\log\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\serial\impl\YasSerializer.ixx">
+      <Filter>hu\serial\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\Message.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ConnectionBase.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ServerConfig.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\NetType.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\impl\asio\AsioConnection.ixx">
+      <Filter>hu\net\impl\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\Header.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ConnectionConfig.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\log\LogType.ixx">
+      <Filter>hu\log</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ConnectionManager.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ClientConfig.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\impl\asio\AsioServer.ixx">
+      <Filter>hu\net\impl\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\Client.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\ClientBase.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\impl\asio\AsioClient.ixx">
+      <Filter>hu\net\impl\asio</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\echo\EchoClient.ixx">
+      <Filter>hu\test\echo</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\echo\EchoServer.ixx">
+      <Filter>hu\test\echo</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\echo\EchoType.ixx">
+      <Filter>hu\test\echo</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\rand\Random.ixx">
+      <Filter>hu\rand</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\crypt\Crypt.ixx">
+      <Filter>hu\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\crypt\CryptBase.ixx">
+      <Filter>hu\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\crypt\CryptType.ixx">
+      <Filter>hu\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\crypt\impl\BotanPkCrypt.ixx">
+      <Filter>hu\crypt\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\HeaderInfo.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\HeaderBase.ixx">
+      <Filter>hu\net</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\chat\ChatClient.ixx">
+      <Filter>hu\test\chat</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\chat\ChatServer.ixx">
+      <Filter>hu\test\chat</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\chat\ChatType.ixx">
+      <Filter>hu\test\chat</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\container\MapBase.ixx">
+      <Filter>hu\container</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\container\LockFreeQueue.ixx">
+      <Filter>hu\container</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\local\LocalDB.ixx">
+      <Filter>hu\db\local</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\local\LocalDBConfig.ixx">
+      <Filter>hu\db\local</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\local\LocalDBBase.ixx">
+      <Filter>hu\db\local</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\local\impl\RocksDB.ixx">
+      <Filter>hu\db\local\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\local\LocalDBType.ixx">
+      <Filter>hu\db\local</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestAutoQueue.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestConsole.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestCrypt.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestExpression.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestLocalDB.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestLog.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestRandom.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestSerial.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestSingleton.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestUtil.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestTemp.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\TestType.ixx">
+      <Filter>hu\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hu\serial\SerialMacro.hpp">
+      <Filter>hu\serial</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\NetMacro.hpp">
+      <Filter>hu\net</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\log\LogMacro.hpp">
+      <Filter>hu\log</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\Macro.hpp">
+      <Filter>hu</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\db\local\LocalDBMacro.hpp">
+      <Filter>hu\db\local</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

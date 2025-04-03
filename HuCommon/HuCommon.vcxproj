@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="hu\container\AutoQueueBase.ixx" />
+    <ClCompile Include="hu\container\impl\LockFreeAutoQueue.ixx" />
+    <ClCompile Include="hu\container\impl\MpscAutoQueue.ixx" />
+    <ClCompile Include="hu\container\LockFreeQueue.ixx" />
+    <ClCompile Include="hu\container\MapBase.ixx" />
+    <ClCompile Include="hu\crypt\CryptType.ixx" />
+    <ClCompile Include="hu\crypt\impl\BotanPkCrypt.ixx" />
+    <ClCompile Include="hu\crypt\Crypt.ixx" />
+    <ClCompile Include="hu\crypt\CryptBase.ixx" />
+    <ClCompile Include="hu\db\local\impl\RocksDB.ixx" />
+    <ClCompile Include="hu\db\local\LocalDBConfig.ixx" />
+    <ClCompile Include="hu\db\local\LocalDB.ixx" />
+    <ClCompile Include="hu\db\local\LocalDBBase.ixx" />
+    <ClCompile Include="hu\db\local\LocalDBType.ixx" />
+    <ClCompile Include="hu\io\Console.ixx" />
+    <ClCompile Include="hu\log\AsyncLogWriterBase.ixx" />
+    <ClCompile Include="hu\log\LogType.ixx" />
+    <ClCompile Include="hu\log\LogWriterBase.ixx" />
+    <ClCompile Include="hu\log\impl\ConsoleLogWriter.ixx" />
+    <ClCompile Include="hu\log\impl\FileLogWriter.ixx" />
+    <ClCompile Include="hu\log\Log.ixx" />
+    <ClCompile Include="hu\net\Client.ixx" />
+    <ClCompile Include="hu\net\ClientBase.ixx" />
+    <ClCompile Include="hu\net\ClientConfig.ixx" />
+    <ClCompile Include="hu\net\ConnectionBase.ixx" />
+    <ClCompile Include="hu\net\ConnectionConfig.ixx" />
+    <ClCompile Include="hu\net\ConnectionManager.ixx" />
+    <ClCompile Include="hu\net\HeaderBase.ixx" />
+    <ClCompile Include="hu\net\HeaderInfo.ixx" />
+    <ClCompile Include="hu\net\impl\asio\AsioClient.ixx" />
+    <ClCompile Include="hu\net\impl\asio\AsioServer.ixx" />
+    <ClCompile Include="hu\net\Header.ixx" />
+    <ClCompile Include="hu\net\impl\asio\AsioConnection.ixx" />
+    <ClCompile Include="hu\net\impl\asio\AsioRunner.ixx" />
+    <ClCompile Include="hu\net\impl\asio\AsioType.ixx" />
+    <ClCompile Include="hu\net\ServerBase.ixx" />
+    <ClCompile Include="hu\net\Message.ixx" />
+    <ClCompile Include="hu\net\NetType.ixx" />
+    <ClCompile Include="hu\net\Server.ixx" />
+    <ClCompile Include="hu\net\ServerConfig.ixx" />
+    <ClCompile Include="hu\pattern\INoCopy.ixx" />
+    <ClCompile Include="hu\pattern\ISingleton.ixx" />
+    <ClCompile Include="hu\pattern\ISingletonShare.ixx" />
+    <ClCompile Include="hu\rand\Random.ixx" />
+    <ClCompile Include="hu\serial\impl\YasSerializer.ixx" />
+    <ClCompile Include="hu\serial\Serializer.ixx" />
+    <ClCompile Include="hu\test\chat\ChatClient.ixx" />
+    <ClCompile Include="hu\test\chat\ChatServer.ixx" />
+    <ClCompile Include="hu\test\chat\ChatType.ixx" />
+    <ClCompile Include="hu\test\echo\EchoClient.ixx" />
+    <ClCompile Include="hu\test\echo\EchoServer.ixx" />
+    <ClCompile Include="hu\test\echo\EchoType.ixx" />
+    <ClCompile Include="hu\test\impl\TestAutoQueue.ixx" />
+    <ClCompile Include="hu\test\impl\TestConsole.ixx" />
+    <ClCompile Include="hu\test\impl\TestCrypt.ixx" />
+    <ClCompile Include="hu\test\impl\TestExpression.ixx" />
+    <ClCompile Include="hu\test\impl\TestLocalDB.ixx" />
+    <ClCompile Include="hu\test\impl\TestLog.ixx" />
+    <ClCompile Include="hu\test\impl\TestRandom.ixx" />
+    <ClCompile Include="hu\test\impl\TestSerial.ixx" />
+    <ClCompile Include="hu\test\impl\TestSingleton.ixx" />
+    <ClCompile Include="hu\test\impl\TestTemp.ixx" />
+    <ClCompile Include="hu\test\impl\TestUtil.ixx" />
+    <ClCompile Include="hu\test\TestStart.ixx" />
+    <ClCompile Include="hu\test\TestType.ixx" />
+    <ClCompile Include="hu\time\Timer.ixx" />
+    <ClCompile Include="hu\Type.ixx" />
+    <ClCompile Include="hu\Util.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hu\db\local\LocalDBMacro.hpp" />
+    <ClInclude Include="hu\log\LogMacro.hpp" />
+    <ClInclude Include="hu\net\NetMacro.hpp" />
+    <ClInclude Include="hu\serial\SerialMacro.hpp" />
+    <ClInclude Include="hu\Macro.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{7a10eea3-fb0d-463c-b8cf-3f3ce368c402}</ProjectGuid>
+    <RootNamespace>HuCommon</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\HuCommonD.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\HuCommonR.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
