@@ -5,12 +5,7 @@
 // TODO: Import (TestRandom)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.log.Log;
-import hu.rand.Random;
-import hu.Type;
-import hu.Util;
-
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;

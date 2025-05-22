@@ -5,11 +5,7 @@
 // TODO: Import (TestConsole)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.io.Console;
-import hu.log.Log;
-import hu.Type;
-
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;

@@ -5,14 +5,10 @@
 // TODO: Import (TestCrypt)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.crypt.Crypt;
-import hu.crypt.CryptType;
-import hu.log.Log;
 import hu.net.Message;
 import hu.test.TestType;
-import hu.Type;
 
-import "hu/log/LogMacro.hpp";
+import "hu/crypt/Crypt.hpp";
 
 
 using namespace hu;
@@ -47,7 +43,7 @@ export bool test_crypt()
     {
         // 보낼 메시지를 만들고 객체를 쓴다.
         Message req_msg;
-        HU_ASSERT( req_msg.WriteObj( req ) );
+        HU_ASSERT_R( req_msg.WriteObj( req ) );
 
         // 보낼 메시지를 암호화 한다.
         send_crypt.Encrypt( req_msg.GetBuffer() );
@@ -61,10 +57,10 @@ export bool test_crypt()
 
         // 받은 메시지로부터 객체를 읽는다.
         SerialInfo recv;
-        HU_ASSERT( recv_msg.ReadObj( recv ) );
+        HU_ASSERT_R( recv_msg.ReadObj( recv ) );
 
         // 받은 메시지를 검증한다.
-        HU_ASSERT( req == recv );
+        HU_ASSERT_R( req == recv );
         recv.Test();
 
         return true;

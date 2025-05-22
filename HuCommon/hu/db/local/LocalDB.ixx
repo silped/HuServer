@@ -11,14 +11,8 @@ import <memory>;
 import hu.db.local.impl.RocksDB;
 import hu.db.local.LocalDBBase;
 import hu.db.local.LocalDBConfig;
-import hu.db.local.LocalDBType;
-import hu.log.Log;
-import hu.pattern.INoCopy;
-import hu.serial.Serializer;
-import hu.Type;
-import hu.Util;
 
-import "hu/db/local/LocalDBMacro.hpp";
+import "hu/db/local/LocalDBType.hpp";
 
 
 namespace hu {
@@ -64,13 +58,13 @@ public:
         buf.reserve( T::GetWriteSize( obj ) );
         if ( T::Write( obj, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, get_localdb_category_str(), _T( "객체 버퍼 쓰기 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Key == {})" ), key );
             return false;
         }
 
         if ( impl_->Write( key, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, get_localdb_category_str(), _T( "디비 쓰기 실패 (Key = {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 쓰기 실패 (Key = {})" ), key );
             return false;
         }
 
@@ -91,7 +85,7 @@ public:
 
         if ( T::Read( buf, obj ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, get_localdb_category_str(), _T( "객체 버퍼 읽기 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 읽기 실패 (Key == {})" ), key );
             return false;
         }
 
@@ -106,7 +100,7 @@ public:
     {
         if ( impl_->Delete( key ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, get_localdb_category_str(), _T( "디비 삭제 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 삭제 실패 (Key == {})" ), key );
             return false;
         }
 
@@ -187,7 +181,7 @@ public:
     {
         if ( transaction.Init( impl_->CreateTrans( check_rollback ) ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, get_localdb_category_str(), _T( "트랜잭션 생성 실패 (DBName == {})" ), config_.name );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "트랜잭션 생성 실패 (DBName == {})" ), config_.name );
             return false;
         }
 

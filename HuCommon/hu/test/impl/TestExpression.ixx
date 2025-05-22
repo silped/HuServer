@@ -5,12 +5,7 @@
 // TODO: Import (TestExpression)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import <array>;
-
-import hu.log.Log;
-import hu.Type;
-
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;
@@ -74,28 +69,28 @@ export bool test_expression()
     // 이진수 입력을 검사한다.
     {
         const UInt8 val1 { 0B11 };
-        HU_ASSERT( val1 == 0x03 );
+        HU_ASSERT_R( val1 == 0x03 );
 
         const UInt8 val2 { 0B1111 };
-        HU_ASSERT( val2 == 0x0F );
+        HU_ASSERT_R( val2 == 0x0F );
 
         const UInt8 val3 { 0B11111111 };
-        HU_ASSERT( val3 == 0xFF );
+        HU_ASSERT_R( val3 == 0xFF );
     }
 
     // 숫자형 자릿수 구분자를 검사한다.
     {
         const Int32 val { 1'000'000 };
-        HU_ASSERT( val == 1000000 );
+        HU_ASSERT_R( val == 1000000 );
     }
 
     // 배열 자동 초기화를 검사한다.
     {
         const Int32 vals[ 10 ] { 1, };
-        HU_ASSERT( ( vals[ 0 ] == 1 ) && ( vals[ 9 ] == 0 ) );
+        HU_ASSERT_R( ( vals[ 0 ] == 1 ) && ( vals[ 9 ] == 0 ) );
 
-        const std::array<Int32, 10> vals2 { 1, };
-        HU_ASSERT( ( vals2[ 0 ] == 1 ) && ( vals2[ 9 ] == 0 ) );
+        const Array<Int32, 10> vals2 { 1, };
+        HU_ASSERT_R( ( vals2[ 0 ] == 1 ) && ( vals2[ 9 ] == 0 ) );
     }
 
     // if 문에서 초기화와 조건식 평가를 동시에 한다.
@@ -124,10 +119,10 @@ export bool test_expression()
     Int32 sum { 0 };
     for ( const Int32 vals[] { 10, 20, 30 }; const Int32 val : vals )
         sum += val;
-    HU_ASSERT( sum == 60 );
+    HU_ASSERT_R( sum == 60 );
 
     // 정적 멤버 초기화를 검사한다.
-    HU_ASSERT( CreateObj::kConst == _T( "Const" ) );
+    HU_ASSERT_R( CreateObj::kConst == _T( "Const" ) );
 
     // 생성자 사용을 검사한다.
     {
@@ -135,13 +130,13 @@ export bool test_expression()
         HU_STATIC_ASSERT( std::is_aggregate_v<CreateObj> == false );
 
         const CreateObj obj1 { 10, 20 };
-        HU_ASSERT( obj1.HasValue( 10, 20 ) );
+        HU_ASSERT_R( obj1.HasValue( 10, 20 ) );
 
         const CreateObj obj2 { 10 };
-        HU_ASSERT( obj2.HasValue( 10, 0 ) );
+        HU_ASSERT_R( obj2.HasValue( 10, 0 ) );
 
         const CreateObj obj3;
-        HU_ASSERT( obj3.HasValue( 0, 0 ) );
+        HU_ASSERT_R( obj3.HasValue( 0, 0 ) );
     }
 
     // AddressSanitizer가 버퍼 오버 플로우를 감지하는지 검사한다.

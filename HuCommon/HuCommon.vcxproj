@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\_external\include\yas\detail\io\header.cpp" />
     <ClCompile Include="hu\container\AutoQueueBase.ixx" />
     <ClCompile Include="hu\container\impl\LockFreeAutoQueue.ixx" />
     <ClCompile Include="hu\container\impl\MpscAutoQueue.ixx" />
@@ -81,11 +82,24 @@
     <ClCompile Include="hu\Util.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hu\db\local\LocalDBMacro.hpp" />
+    <ClInclude Include="hu\Core.hpp" />
+    <ClInclude Include="hu\crypt\Crypt.hpp" />
+    <ClInclude Include="hu\db\local\LocalDB.hpp" />
+    <ClInclude Include="hu\db\local\LocalDBType.hpp" />
+    <ClInclude Include="hu\db\local\LocalDBTypeMacro.hpp" />
+    <ClInclude Include="hu\log\Log.hpp" />
     <ClInclude Include="hu\log\LogMacro.hpp" />
-    <ClInclude Include="hu\net\NetMacro.hpp" />
+    <ClInclude Include="hu\net\Client.hpp" />
+    <ClInclude Include="hu\net\NetType.hpp" />
+    <ClInclude Include="hu\net\NetTypeMacro.hpp" />
+    <ClInclude Include="hu\net\Server.hpp" />
     <ClInclude Include="hu\serial\SerialMacro.hpp" />
-    <ClInclude Include="hu\Macro.hpp" />
+    <ClInclude Include="hu\Type.hpp" />
+    <ClInclude Include="hu\TypeMacro.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\_doc\vcpkg 설치.txt" />
+    <Text Include="..\_doc\Visual Studio 프로젝트 설정.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

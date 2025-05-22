@@ -7,16 +7,12 @@
 
 import hu.db.local.LocalDBConfig;
 import hu.db.local.LocalDBBase;
-import hu.db.local.LocalDBType;
-import hu.log.Log;
-import hu.Type;
-import hu.Util;
 
 import <rocksdb/db.h>;
 import <rocksdb/options.h>;
 import <rocksdb/utilities/transaction_db.h>;
 
-import "hu/db/local/LocalDBMacro.hpp";
+import "hu/db/local/LocalDBType.hpp";
 
 
 namespace hu {

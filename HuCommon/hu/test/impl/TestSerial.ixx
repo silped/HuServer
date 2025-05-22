@@ -5,12 +5,9 @@
 // TODO: Import (TestSerial)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.log.Log;
-import hu.serial.Serializer;
 import hu.test.TestType;
-import hu.Type;
 
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;
@@ -35,14 +32,14 @@ export bool test_serial()
     buf.reserve( buf_size );
 
     // 객체를 바이너리로 버퍼에 쓴다.
-    HU_ASSERT( BinSerializer::Write( src, buf ) );
-    HU_ASSERT( buf.size() == buf_size );
-    HU_ASSERT( buf.capacity() == buf_size );
+    HU_ASSERT_R( BinSerializer::Write( src, buf ) );
+    HU_ASSERT_R( buf.size() == buf_size );
+    HU_ASSERT_R( buf.capacity() == buf_size );
 
     // 바이너리로 기록된 버퍼에서 객체를 읽는다.
     SerialInfo target;
-    HU_ASSERT( BinSerializer::Read( buf, target ) );
-    HU_ASSERT( src == target );
+    HU_ASSERT_R( BinSerializer::Read( buf, target ) );
+    HU_ASSERT_R( src == target );
     target.Test();
 
     // JSON 객체 크기에 맞춘 버퍼를 준비한다.
@@ -51,14 +48,14 @@ export bool test_serial()
     json_buf.reserve( json_buf_size );
 
     // 객체를 JSON으로 버퍼에 쓴다.
-    HU_ASSERT( JsonSerializer::Write( src, json_buf ) );
-    HU_ASSERT( json_buf.size() == json_buf_size );
-    HU_ASSERT( json_buf.capacity() == json_buf_size );
+    HU_ASSERT_R( JsonSerializer::Write( src, json_buf ) );
+    HU_ASSERT_R( json_buf.size() == json_buf_size );
+    HU_ASSERT_R( json_buf.capacity() == json_buf_size );
 
     // JSON으로 기록된 버퍼에서 객체를 읽는다.
     target.Clear();
-    HU_ASSERT( JsonSerializer::Read( json_buf, target ) );
-    HU_ASSERT( src == target );
+    HU_ASSERT_R( JsonSerializer::Read( json_buf, target ) );
+    HU_ASSERT_R( src == target );
     target.Test();
 
     return true;

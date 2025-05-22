@@ -5,11 +5,7 @@
 // TODO: Import (TestType)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.log.Log;
-import hu.Type;
-
-import "hu/log/LogMacro.hpp";
-import "hu/serial/SerialMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;

@@ -8,10 +8,8 @@ export module hu.net.HeaderBase;
 import hu.net.ConnectionConfig;
 import hu.net.HeaderInfo;
 import hu.net.Message;
-import hu.net.NetType;
-import hu.pattern.INoCopy;
-import hu.Type;
-import hu.Util;
+
+import "hu/net/NetType.hpp";
 
 
 namespace hu {

@@ -9,9 +9,8 @@ import <functional>;
 import <memory>;
 
 import hu.db.local.LocalDBConfig;
-import hu.db.local.LocalDBType;
-import hu.pattern.INoCopy;
-import hu.Type;
+
+import "hu/db/local/LocalDBType.hpp";
 
 
 namespace hu {

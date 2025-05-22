@@ -24,7 +24,7 @@
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <DisableSpecificWarnings>4127;4251;4275;4996;5103;5260;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4251;4275;4458;4819;4996;5103;5260;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <AdditionalOptions>
       </AdditionalOptions>
       <AdditionalIncludeDirectories>

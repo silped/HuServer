@@ -5,10 +5,7 @@
 // TODO: Import (LocalDBConfig)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.db.local.LocalDBType;
-import hu.Type;
-
-import "hu/Macro.hpp";
+import "hu/db/local/LocalDBType.hpp";
 
 
 namespace hu {

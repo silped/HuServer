@@ -5,11 +5,7 @@
 // TODO: Import (TestSingleton)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.log.Log;
-import hu.pattern.ISingletonShare;
-import hu.Type;
-
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;

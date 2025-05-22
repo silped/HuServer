@@ -70,6 +70,21 @@
     <Filter Include="hu\test\impl">
       <UniqueIdentifier>{9b16a719-454a-4868-92af-848396fddfb5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_doc">
+      <UniqueIdentifier>{9df06c9c-c2fa-4ef3-a426-93597f16c48d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external">
+      <UniqueIdentifier>{7456c8be-0eeb-4516-ac60-2a1ab5306aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas">
+      <UniqueIdentifier>{c212a7f3-9e53-4c58-a8da-9273a0995bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas\detail">
+      <UniqueIdentifier>{7f3c42fa-e03d-442a-a61e-9f348d151d72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas\detail\io">
+      <UniqueIdentifier>{d73929aa-a109-4903-9803-88e9bd966867}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -276,22 +291,60 @@
     <ClCompile Include="hu\test\TestType.ixx">
       <Filter>hu\test</Filter>
     </ClCompile>
+    <ClCompile Include="..\_external\include\yas\detail\io\header.cpp">
+      <Filter>_external\yas\detail\io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hu\serial\SerialMacro.hpp">
       <Filter>hu\serial</Filter>
     </ClInclude>
-    <ClInclude Include="hu\net\NetMacro.hpp">
+    <ClInclude Include="hu\net\NetTypeMacro.hpp">
       <Filter>hu\net</Filter>
     </ClInclude>
     <ClInclude Include="hu\log\LogMacro.hpp">
       <Filter>hu\log</Filter>
     </ClInclude>
-    <ClInclude Include="hu\Macro.hpp">
+    <ClInclude Include="hu\TypeMacro.hpp">
       <Filter>hu</Filter>
     </ClInclude>
-    <ClInclude Include="hu\db\local\LocalDBMacro.hpp">
+    <ClInclude Include="hu\db\local\LocalDBTypeMacro.hpp">
       <Filter>hu\db\local</Filter>
     </ClInclude>
+    <ClInclude Include="hu\Core.hpp">
+      <Filter>hu</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\Type.hpp">
+      <Filter>hu</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\Client.hpp">
+      <Filter>hu\net</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\NetType.hpp">
+      <Filter>hu\net</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\Server.hpp">
+      <Filter>hu\net</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\log\Log.hpp">
+      <Filter>hu\log</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\crypt\Crypt.hpp">
+      <Filter>hu\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\db\local\LocalDB.hpp">
+      <Filter>hu\db\local</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\db\local\LocalDBType.hpp">
+      <Filter>hu\db\local</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\_doc\vcpkg 설치.txt">
+      <Filter>_doc</Filter>
+    </Text>
+    <Text Include="..\_doc\Visual Studio 프로젝트 설정.txt">
+      <Filter>_doc</Filter>
+    </Text>
   </ItemGroup>
 </Project>

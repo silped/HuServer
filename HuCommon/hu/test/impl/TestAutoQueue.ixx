@@ -7,12 +7,8 @@
 
 import hu.container.impl.LockFreeAutoQueue;
 import hu.container.impl.MpscAutoQueue;
-import hu.io.Console;
-import hu.log.Log;
-import hu.Type;
-import hu.Util;
 
-import "hu/log/LogMacro.hpp";
+import "hu/Core.hpp";
 
 
 using namespace hu;
