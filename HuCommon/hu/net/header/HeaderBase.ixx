@@ -1,15 +1,16 @@
-export module hu.net.HeaderBase;
+export module hu.net.header.HeaderBase;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: Import (HeaderBase)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.net.ConnectionConfig;
-import hu.net.HeaderInfo;
+import hu.net.connection.ConnectionConfig;
+import hu.net.header.HeaderInfo;
 import hu.net.Message;
-
-import "hu/net/NetType.hpp";
+import hu.pattern.INoCopy;
+import hu.Type;
+import hu.Util;
 
 
 namespace hu {
@@ -25,13 +26,11 @@ public:
     explicit HeaderBase(
         const ConnectionConfigInfo& config
     ) :
-        config_ { config }
+        config_( config )
     {
     }
 
-    virtual ~HeaderBase()
-    {
-    }
+    virtual ~HeaderBase() = default;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +83,7 @@ public:
     explicit HeaderImpl(
         const ConnectionConfigInfo& config
     ) :
-        HeaderBase { config }
+        HeaderBase( config )
     {
     }
 
@@ -96,7 +95,9 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    virtual bool WriteTo( const Message& msg, Buffer& buffer ) const override
+    virtual bool WriteTo(
+        const Message& msg,
+        Buffer&        buffer ) const override
     {
         if ( check_message_size( msg.GetSize() ) == false )
             return false;
@@ -113,7 +114,9 @@ public:
         return buffer_;
     }
 
-    virtual bool ReadyMessage( Message& msg ) override
+    virtual bool ReadyMessage(
+        Message& msg
+    ) override
     {
         if ( util::to_info( buffer_, info_ ) == false )
             return false;

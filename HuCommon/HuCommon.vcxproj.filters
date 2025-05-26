@@ -91,6 +91,18 @@
     <Filter Include="hu\amqp\impl">
       <UniqueIdentifier>{6c98719d-5795-408f-895e-b5b219d7c4a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\net\client">
+      <UniqueIdentifier>{1f6218b7-44e0-4fa4-8c0a-6660737c374f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net\server">
+      <UniqueIdentifier>{446e5daf-9286-456f-9390-d66145c79ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net\header">
+      <UniqueIdentifier>{65262aef-5d90-44de-8919-cf0c7e0aa6a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\net\connection">
+      <UniqueIdentifier>{d78cef13-b31b-4630-bca3-d8987d1096d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -120,9 +132,6 @@
     <ClCompile Include="hu\log\Log.ixx">
       <Filter>hu\log</Filter>
     </ClCompile>
-    <ClCompile Include="hu\log\LogWriterBase.ixx">
-      <Filter>hu\log</Filter>
-    </ClCompile>
     <ClCompile Include="hu\log\AsyncLogWriterBase.ixx">
       <Filter>hu\log</Filter>
     </ClCompile>
@@ -131,12 +140,6 @@
     </ClCompile>
     <ClCompile Include="hu\serial\Serializer.ixx">
       <Filter>hu\serial</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\Server.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\ServerBase.ixx">
-      <Filter>hu\net</Filter>
     </ClCompile>
     <ClCompile Include="hu\net\impl\asio\AsioRunner.ixx">
       <Filter>hu\net\impl\asio</Filter>
@@ -162,41 +165,17 @@
     <ClCompile Include="hu\net\Message.ixx">
       <Filter>hu\net</Filter>
     </ClCompile>
-    <ClCompile Include="hu\net\ConnectionBase.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\ServerConfig.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
     <ClCompile Include="hu\net\NetType.ixx">
       <Filter>hu\net</Filter>
     </ClCompile>
     <ClCompile Include="hu\net\impl\asio\AsioConnection.ixx">
       <Filter>hu\net\impl\asio</Filter>
     </ClCompile>
-    <ClCompile Include="hu\net\Header.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\ConnectionConfig.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
     <ClCompile Include="hu\log\LogType.ixx">
       <Filter>hu\log</Filter>
     </ClCompile>
-    <ClCompile Include="hu\net\ConnectionManager.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\ClientConfig.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
     <ClCompile Include="hu\net\impl\asio\AsioServer.ixx">
       <Filter>hu\net\impl\asio</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\Client.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\ClientBase.ixx">
-      <Filter>hu\net</Filter>
     </ClCompile>
     <ClCompile Include="hu\net\impl\asio\AsioClient.ixx">
       <Filter>hu\net\impl\asio</Filter>
@@ -221,12 +200,6 @@
     </ClCompile>
     <ClCompile Include="hu\crypt\impl\BotanPkCrypt.ixx">
       <Filter>hu\crypt\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\HeaderInfo.ixx">
-      <Filter>hu\net</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\net\HeaderBase.ixx">
-      <Filter>hu\net</Filter>
     </ClCompile>
     <ClCompile Include="hu\test\chat\ChatClient.ixx">
       <Filter>hu\test\chat</Filter>
@@ -303,13 +276,46 @@
     <ClCompile Include="hu\test\impl\TestAMQP.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
+    <ClCompile Include="hu\net\client\Client.ixx">
+      <Filter>hu\net\client</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\client\ClientBase.ixx">
+      <Filter>hu\net\client</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\client\ClientConfig.ixx">
+      <Filter>hu\net\client</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\header\Header.ixx">
+      <Filter>hu\net\header</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\header\HeaderBase.ixx">
+      <Filter>hu\net\header</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\header\HeaderInfo.ixx">
+      <Filter>hu\net\header</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\connection\ConnectionBase.ixx">
+      <Filter>hu\net\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\connection\ConnectionConfig.ixx">
+      <Filter>hu\net\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\connection\ConnectionManager.ixx">
+      <Filter>hu\net\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\server\Server.ixx">
+      <Filter>hu\net\server</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\server\ServerBase.ixx">
+      <Filter>hu\net\server</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\net\server\ServerConfig.ixx">
+      <Filter>hu\net\server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hu\serial\SerialMacro.hpp">
       <Filter>hu\serial</Filter>
-    </ClInclude>
-    <ClInclude Include="hu\net\NetTypeMacro.hpp">
-      <Filter>hu\net</Filter>
     </ClInclude>
     <ClInclude Include="hu\log\LogMacro.hpp">
       <Filter>hu\log</Filter>
@@ -323,15 +329,6 @@
     <ClInclude Include="hu\Type.hpp">
       <Filter>hu</Filter>
     </ClInclude>
-    <ClInclude Include="hu\net\Client.hpp">
-      <Filter>hu\net</Filter>
-    </ClInclude>
-    <ClInclude Include="hu\net\NetType.hpp">
-      <Filter>hu\net</Filter>
-    </ClInclude>
-    <ClInclude Include="hu\net\Server.hpp">
-      <Filter>hu\net</Filter>
-    </ClInclude>
     <ClInclude Include="hu\log\Log.hpp">
       <Filter>hu\log</Filter>
     </ClInclude>
@@ -340,6 +337,12 @@
     </ClInclude>
     <ClInclude Include="hu\db\local\LocalDB.hpp">
       <Filter>hu\db\local</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\client\Client.hpp">
+      <Filter>hu\net\client</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\net\server\Server.hpp">
+      <Filter>hu\net\server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
