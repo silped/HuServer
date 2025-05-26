@@ -5,38 +5,38 @@
 // TODO: Import (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.db.local.LocalDBConfig;
-import hu.db.local.LocalDBBase;
+import hu.db.local.LocalDBType;
 
 import <rocksdb/db.h>;
 import <rocksdb/options.h>;
 import <rocksdb/utilities/transaction_db.h>;
 
-import "hu/db/local/LocalDBType.hpp";
+import "hu/Core.hpp";
 
 
 namespace hu {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Using (RocksDB)
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-using TransImplType = rocksdb::Transaction;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: Function (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-String get_error_str(
+namespace util {
+
+String to_str(
     const rocksdb::Status& status
 )
 {
-    return util::get_format_str( _T( "ErrCode = {}, ErrMsg = {}" ),
-        static_cast<UInt32>( status.code() ), util::astr_to_wstr( status.ToString() ) );
+    return util::format_str( _T( "ErrCode = {}, ErrMsg = {}" ),
+        static_cast<UInt32>( status.code() ), util::to_str( status.ToString() ) );
 }
 
+} // util
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: Class (RocksDB)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
 // 로컬 디비 트랜잭션 구현체를 위한 기반 클래스
 class RocksDBTrans final : public LocalDBTransBase
 {
@@ -48,10 +48,10 @@ public:
     RocksDBTrans(
         const LocalDBConfigInfo&    config,
         const LocalDBCheckRollback& check_rollback,
-        TransImplType* const        impl
+        rocksdb::Transaction* const impl
     ) :
-        LocalDBTransBase { config, check_rollback },
-        impl_            { impl }
+        LocalDBTransBase ( config, check_rollback ),
+        impl_            ( impl )
     {
     }
 
@@ -70,8 +70,8 @@ public:
                 {
                     impl_->Rollback();
 
-                    HU_LOCALDB_ERROR( _T( "트랜잭션 커밋 실패 (DBName = {}, {})" ),
-                        config_.name, get_error_str( status ) );
+                    HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 커밋 실패 (DBName = {}, {})" ),
+                        config_.name, util::to_str( status ) );
                 }
             }
 
@@ -96,8 +96,8 @@ public:
             impl_->Rollback();
             util::delete_ptr( impl_ );
 
-            HU_LOCALDB_ERROR( _T( "디비 쓰기 실패 (DBName = {}, Key = {}, {})" ),
-                config_.name, key, get_error_str( status ) );
+            HU_LOG_ERROR( kLocalDB, _T( "디비 쓰기 실패 (DBName = {}, Key = {}, {})" ),
+                config_.name, key, util::to_str( status ) );
             return false;
         }
 
@@ -117,9 +117,10 @@ public:
             {
                 util::delete_ptr( impl_ );
 
-                HU_LOCALDB_ERROR( _T( "디비 읽기 실패 (DBName = {}, Key = {}, {})" ),
-                    config_.name, key, get_error_str( status ) );
+                HU_LOG_ERROR( kLocalDB, _T( "디비 읽기 실패 (DBName = {}, Key = {}, {})" ),
+                    config_.name, key, util::to_str( status ) );
             }
+
             return false;
         }
 
@@ -134,11 +135,15 @@ public:
         const auto status = impl_->Delete( to_param( key ) );
         if ( status.ok() == false )
         {
-            impl_->Rollback();
-            util::delete_ptr( impl_ );
+            if ( status.IsNotFound() == false )
+            {
+                impl_->Rollback();
+                util::delete_ptr( impl_ );
 
-            HU_LOCALDB_ERROR( _T( "디비 삭제 실패 (DBName = {}, Key = {}, {})" ),
-                config_.name, key, get_error_str( status ) );
+                HU_LOG_ERROR( kLocalDB, _T( "디비 삭제 실패 (DBName = {}, Key = {}, {})" ),
+                    config_.name, key, util::to_str( status ) );
+            }
+
             return false;
         }
 
@@ -159,7 +164,7 @@ private:
         const LocalDBKey& key
     )
     {
-        return util::wstr_to_astr( key );
+        return util::to_astr( key );
     }
 
     // 버퍼를 파라미터로 변환한다.
@@ -171,8 +176,8 @@ private:
     }
 
 private:
-    TransImplType*       impl_ { nullptr };
-    rocksdb::ReadOptions read_options_;
+    rocksdb::Transaction* impl_ { nullptr };
+    rocksdb::ReadOptions  read_options_;
 };
 
 // RocksDB를 사용해서 구현한 로컬 디비 클래스
@@ -186,7 +191,7 @@ public:
     explicit RocksDB(
         const LocalDBConfigInfo& config
     ) :
-        LocalDBBase { config }
+        LocalDBBase( config )
     {
     }
 
@@ -210,31 +215,32 @@ public:
 
         rocksdb::TransactionDBOptions trans_db_options;
 
-        std::string db_name;
+        AString db_name;
         if ( config_.dir.empty() == false )
-            db_name = util::wstr_to_astr( util::get_format_str( _T( "{}/{}" ), config_.dir, config_.name ) );
+            db_name = util::to_astr( util::format_str( _T( "{}/{}" ), config_.dir, config_.name ) );
         else
-            db_name = util::wstr_to_astr( config_.name );
+            db_name = util::to_astr( config_.name );
 
         const auto status = rocksdb::TransactionDB::Open( options, trans_db_options, db_name, &impl_ );
         if ( ( status.ok() == false ) || ( impl_ == nullptr ) )
         {
-            HU_LOCALDB_ERROR( _T( "디비 열기 실패 (DBName = {}, {})" ),
-                config_.name, get_error_str( status ) );
+            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (DBName = {}, {})" ), config_.name, util::to_str( status ) );
             return false;
         }
 
         return true;
     }
 
-    virtual LocalDBTransPtr CreateTrans( const LocalDBCheckRollback& check_rollback ) override
+    virtual LocalDBTransImpl CreateTrans(
+        const LocalDBCheckRollback& check_rollback
+    ) override
     {
         rocksdb::WriteOptions options;
 
         auto* const trans_impl_ = impl_->BeginTransaction( options );
         if ( trans_impl_ == nullptr )
         {
-            HU_LOCALDB_ERROR( _T( "트랜잭션 시작 실패 (DBName = {})" ),
+            HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 시작 실패 (DBName = {})" ),
                 config_.name );
             return nullptr;
         }
@@ -248,10 +254,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    using ImplType = rocksdb::TransactionDB;
-
-private:
-    ImplType* impl_ { nullptr };
+    rocksdb::TransactionDB* impl_ { nullptr };
 };
 
 } // hu

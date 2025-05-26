@@ -18,7 +18,7 @@ export bool test_util()
 {
     // 문자열을 배열에 복사한다.
     Char chars[ 256 ] = { 0 };
-    util::str_to_chars( _T( "가나다라" ), chars );
+    util::to_chars( _T( "가나다라" ), chars );
     HU_LOG_NDEBUG( _T( "문자열 배열 복사 = {}" ), chars );
 
     // 현재 시스템 시간 문자열을 얻는다.
@@ -40,12 +40,12 @@ export bool test_util()
     HU_LOG_NDEBUG( _T( "Thread Id = {}" ), util::get_thread_id() );
 
     // WIDE 문자열로 변환한다.
-    HU_ASSERT_R( util::astr_to_wstr( "Test" ) == L"Test" );
-    HU_ASSERT_R( util::astr_to_wstr( "가나다라" ) == L"가나다라" );
+    HU_ASSERT_R( util::to_wstr( "Test" ) == L"Test" );
+    HU_ASSERT_R( util::to_wstr( "가나다라" ) == L"가나다라" );
 
     // ANSI 문자열로 변환한다.
-    HU_ASSERT_R( util::wstr_to_astr( L"Test" ) == "Test" );
-    HU_ASSERT_R( util::wstr_to_astr( L"가나다라" ) == "가나다라" );
+    HU_ASSERT_R( util::to_astr( L"Test" ) == "Test" );
+    HU_ASSERT_R( util::to_astr( L"가나다라" ) == "가나다라" );
 
     return true;
 }

@@ -85,6 +85,12 @@
     <Filter Include="_external\yas\detail\io">
       <UniqueIdentifier>{d73929aa-a109-4903-9803-88e9bd966867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\amqp">
+      <UniqueIdentifier>{b8f95ff9-8d88-4ce3-b219-8c832b83375e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\amqp\impl">
+      <UniqueIdentifier>{6c98719d-5795-408f-895e-b5b219d7c4a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -210,9 +216,6 @@
     <ClCompile Include="hu\crypt\Crypt.ixx">
       <Filter>hu\crypt</Filter>
     </ClCompile>
-    <ClCompile Include="hu\crypt\CryptBase.ixx">
-      <Filter>hu\crypt</Filter>
-    </ClCompile>
     <ClCompile Include="hu\crypt\CryptType.ixx">
       <Filter>hu\crypt</Filter>
     </ClCompile>
@@ -241,12 +244,6 @@
       <Filter>hu\container</Filter>
     </ClCompile>
     <ClCompile Include="hu\db\local\LocalDB.ixx">
-      <Filter>hu\db\local</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\db\local\LocalDBConfig.ixx">
-      <Filter>hu\db\local</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\db\local\LocalDBBase.ixx">
       <Filter>hu\db\local</Filter>
     </ClCompile>
     <ClCompile Include="hu\db\local\impl\RocksDB.ixx">
@@ -294,6 +291,18 @@
     <ClCompile Include="..\_external\include\yas\detail\io\header.cpp">
       <Filter>_external\yas\detail\io</Filter>
     </ClCompile>
+    <ClCompile Include="hu\amqp\AMQP.ixx">
+      <Filter>hu\amqp</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\amqp\AMQPType.ixx">
+      <Filter>hu\amqp</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\amqp\impl\AMQPCpp.ixx">
+      <Filter>hu\amqp\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestAMQP.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hu\serial\SerialMacro.hpp">
@@ -307,9 +316,6 @@
     </ClInclude>
     <ClInclude Include="hu\TypeMacro.hpp">
       <Filter>hu</Filter>
-    </ClInclude>
-    <ClInclude Include="hu\db\local\LocalDBTypeMacro.hpp">
-      <Filter>hu\db\local</Filter>
     </ClInclude>
     <ClInclude Include="hu\Core.hpp">
       <Filter>hu</Filter>
@@ -333,9 +339,6 @@
       <Filter>hu\crypt</Filter>
     </ClInclude>
     <ClInclude Include="hu\db\local\LocalDB.hpp">
-      <Filter>hu\db\local</Filter>
-    </ClInclude>
-    <ClInclude Include="hu\db\local\LocalDBType.hpp">
       <Filter>hu\db\local</Filter>
     </ClInclude>
   </ItemGroup>
