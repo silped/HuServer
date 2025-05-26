@@ -25,8 +25,8 @@ export bool test_local_db()
 
     // 데이터를 쓴다. 성공하면 트랜잭션 선언 범위에서 벗어날때 자동으로 커밋되고 실패하면 자동으로 롤백된다.
     {
-        LocalDBTransaction trans;
-        HU_ASSERT_R( db.CreateTransaction( trans ) );
+        LocalDBTrans trans;
+        HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo objr;
         HU_ASSERT_R( trans.Read( _T( "1" ), objr ) == false );
@@ -37,8 +37,8 @@ export bool test_local_db()
 
     // 데이터를 읽고 다시 삭제한다. 성공하면 트랜잭션 선언 범위에서 벗어날때 자동으로 커밋되고 실패하면 자동으로 롤백된다.
     {
-        LocalDBTransaction trans;
-        HU_ASSERT_R( db.CreateTransaction( trans ) );
+        LocalDBTrans trans;
+        HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
         HU_ASSERT_R( trans.Read( _T( "1" ), obj ) );
@@ -57,8 +57,8 @@ export bool test_local_db()
             return ( check_logic == false );
         };
 
-        LocalDBTransaction trans;
-        HU_ASSERT_R( db.CreateTransaction( trans, check_rollback ) );
+        LocalDBTrans trans;
+        HU_ASSERT_R( db.CreateTrans( trans, check_rollback ) );
 
         SerialInfo objr;
         HU_ASSERT_R( trans.Read( _T( "2" ), objr ) == false );
@@ -72,8 +72,8 @@ export bool test_local_db()
 
     // 롤백이 성공해서 데이터가 없는지 검사한다.
     {
-        LocalDBTransaction trans;
-        HU_ASSERT_R( db.CreateTransaction( trans ) );
+        LocalDBTrans trans;
+        HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
         HU_ASSERT_R( trans.Read( _T( "2" ), obj ) == false );

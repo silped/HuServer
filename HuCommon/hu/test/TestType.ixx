@@ -35,9 +35,9 @@ struct SerialMemberInfo
         data.clear();
     }
 
-    void Test() const
+    void Test( const SrcLocation location = SrcLocation::current() ) const
     {
-        HU_LOG_NDEBUG( _T( "Data = {}" ), data );
+        util::log_ndebug( location, _T( "MemberData = {}" ), data );
     }
 
     HU_SERIAL_MEMBER( SerialMemberInfo, data );
@@ -62,10 +62,10 @@ export struct SerialInfo
         member.Clear();
     }
 
-    void Test() const
+    void Test( const SrcLocation location = SrcLocation::current() ) const
     {
-        HU_LOG_NDEBUG( _T( "Id = {}, Data = {}" ), id, data );
-        member.Test();
+        util::log_ndebug( location, _T( "Id = {}, Data = {}" ), id, data );
+        member.Test( location );
     }
 
     // 직렬화 사용을 선언한다.

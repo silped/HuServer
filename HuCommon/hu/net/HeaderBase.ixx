@@ -102,7 +102,7 @@ public:
             return false;
 
         const T info { msg };
-        util::copy_to_buffer( info, buffer );
+        util::to_buffer( info, buffer );
         return true;
     }
 
@@ -115,7 +115,7 @@ public:
 
     virtual bool ReadyMessage( Message& msg ) override
     {
-        if ( util::copy_to_info( buffer_, info_ ) == false )
+        if ( util::to_info( buffer_, info_ ) == false )
             return false;
 
         const auto size = info_.GetMessageSize();

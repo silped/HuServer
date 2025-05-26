@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\_external\include\yas\detail\io\header.cpp" />
+    <ClCompile Include="hu\amqp\AMQP.ixx" />
+    <ClCompile Include="hu\amqp\AMQPType.ixx" />
+    <ClCompile Include="hu\amqp\impl\AMQPCpp.ixx" />
     <ClCompile Include="hu\container\AutoQueueBase.ixx" />
     <ClCompile Include="hu\container\impl\LockFreeAutoQueue.ixx" />
     <ClCompile Include="hu\container\impl\MpscAutoQueue.ixx" />
@@ -20,11 +23,8 @@
     <ClCompile Include="hu\crypt\CryptType.ixx" />
     <ClCompile Include="hu\crypt\impl\BotanPkCrypt.ixx" />
     <ClCompile Include="hu\crypt\Crypt.ixx" />
-    <ClCompile Include="hu\crypt\CryptBase.ixx" />
     <ClCompile Include="hu\db\local\impl\RocksDB.ixx" />
-    <ClCompile Include="hu\db\local\LocalDBConfig.ixx" />
     <ClCompile Include="hu\db\local\LocalDB.ixx" />
-    <ClCompile Include="hu\db\local\LocalDBBase.ixx" />
     <ClCompile Include="hu\db\local\LocalDBType.ixx" />
     <ClCompile Include="hu\io\Console.ixx" />
     <ClCompile Include="hu\log\AsyncLogWriterBase.ixx" />
@@ -64,6 +64,7 @@
     <ClCompile Include="hu\test\echo\EchoClient.ixx" />
     <ClCompile Include="hu\test\echo\EchoServer.ixx" />
     <ClCompile Include="hu\test\echo\EchoType.ixx" />
+    <ClCompile Include="hu\test\impl\TestAMQP.ixx" />
     <ClCompile Include="hu\test\impl\TestAutoQueue.ixx" />
     <ClCompile Include="hu\test\impl\TestConsole.ixx" />
     <ClCompile Include="hu\test\impl\TestCrypt.ixx" />
@@ -85,8 +86,6 @@
     <ClInclude Include="hu\Core.hpp" />
     <ClInclude Include="hu\crypt\Crypt.hpp" />
     <ClInclude Include="hu\db\local\LocalDB.hpp" />
-    <ClInclude Include="hu\db\local\LocalDBType.hpp" />
-    <ClInclude Include="hu\db\local\LocalDBTypeMacro.hpp" />
     <ClInclude Include="hu\log\Log.hpp" />
     <ClInclude Include="hu\log\LogMacro.hpp" />
     <ClInclude Include="hu\net\Client.hpp" />

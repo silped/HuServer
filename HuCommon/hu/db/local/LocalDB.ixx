@@ -6,27 +6,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import <filesystem>;
-import <memory>;
 
 import hu.db.local.impl.RocksDB;
-import hu.db.local.LocalDBBase;
-import hu.db.local.LocalDBConfig;
+import hu.db.local.LocalDBType;
 
-import "hu/db/local/LocalDBType.hpp";
+import "hu/Core.hpp";
 
 
 namespace hu {
 
 // 로컬 디비 트랜잭션을 구현한 클래스
-export class LocalDBTransaction : private INoCopy
+export class LocalDBTrans final : private INoCopy
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (LocalDBTransaction)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    LocalDBTransaction() = default;
-    ~LocalDBTransaction() = default;
+    LocalDBTrans() = default;
+    ~LocalDBTrans() = default;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +34,7 @@ public:
 public:
     // 초기화 한다.
     bool Init(
-        LocalDBTransPtr&& impl
+        LocalDBTransImpl&& impl
     )
     {
         if ( impl == nullptr )
@@ -56,6 +54,7 @@ public:
     {
         Buffer buf;
         buf.reserve( T::GetWriteSize( obj ) );
+
         if ( T::Write( obj, buf ) == false )
         {
             Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Key == {})" ), key );
@@ -113,11 +112,11 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    LocalDBTransPtr impl_;
+    LocalDBTransImpl impl_;
 };
 
 // 로컬 디비를 구현한 클래스
-export class LocalDB : private INoCopy
+export class LocalDB final : private INoCopy
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (LocalDB)
@@ -140,14 +139,14 @@ public:
     {
         if ( config.IsValid() == false )
         {
-            HU_LOCALDB_ERROR( _T( "설정이 유효하지 않음 (DBName = {})" ),
+            HU_LOG_ERROR( kLocalDB, _T( "설정이 유효하지 않음 (DBName = {})" ),
                 config.name );
             return false;
         }
         
         if ( config_.dir.empty() == false )
         {
-            const String dir_path { util::get_format_str( _T( "{}/{}/" ), util::get_cur_path_str(), config.dir ) };
+            const String dir_path { util::format_str( _T( "{}/{}/" ), util::get_cur_path_str(), config.dir ) };
             if ( std::filesystem::exists( dir_path ) == false )
                 std::filesystem::create_directory( dir_path );
         }
@@ -157,14 +156,14 @@ public:
         impl_ = create_impl( config_ );
         if ( impl_ == nullptr )
         {
-            HU_LOCALDB_ERROR( _T( "구현체 생성 실패 (DBName = {}, Impl = {})" ),
+            HU_LOG_ERROR( kLocalDB, _T( "구현체 생성 실패 (DBName = {}, Impl = {})" ),
                 config.name, LocalDBImplTypeInfo::ToStr( config.impl ) );
             return false;
         }
 
         if ( impl_->Open() == false )
         {
-            HU_LOCALDB_ERROR( _T( "디비 열기 실패 (DBName = {})" ),
+            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (DBName = {})" ),
                 config.name );
             return false;
         }
@@ -173,13 +172,13 @@ public:
     }
 
     // 트랜잭션을 생성한다.
-    bool CreateTransaction(
-        LocalDBTransaction&        transaction,
+    bool CreateTrans(
+        LocalDBTrans&              trans,
         const LocalDBCheckRollback check_rollback = nullptr,
         const SrcLocation          loc = SrcLocation::current()
     ) const
     {
-        if ( transaction.Init( impl_->CreateTrans( check_rollback ) ) == false )
+        if ( trans.Init( impl_->CreateTrans( check_rollback ) ) == false )
         {
             Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "트랜잭션 생성 실패 (DBName == {})" ), config_.name );
             return false;
@@ -194,10 +193,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    using ImplType = std::unique_ptr<LocalDBBase>;
-
-private:
-    static ImplType create_impl(
+    static LocalDBImpl create_impl(
         const LocalDBConfigInfo& config
     )
     {
@@ -212,7 +208,7 @@ private:
 
 private:
     LocalDBConfigInfo config_;
-    ImplType          impl_;
+    LocalDBImpl       impl_;
 };
 
 } // hu
