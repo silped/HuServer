@@ -103,6 +103,9 @@
     <Filter Include="hu\net\connection">
       <UniqueIdentifier>{d78cef13-b31b-4630-bca3-d8987d1096d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\test\stress">
+      <UniqueIdentifier>{2fde9308-ee9c-4c42-9499-2fb797596bb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -311,6 +314,15 @@
     </ClCompile>
     <ClCompile Include="hu\net\server\ServerConfig.ixx">
       <Filter>hu\net\server</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\stress\StressClient.ixx">
+      <Filter>hu\test\stress</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\stress\StressServer.ixx">
+      <Filter>hu\test\stress</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\stress\StressType.ixx">
+      <Filter>hu\test\stress</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

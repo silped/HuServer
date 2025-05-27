@@ -14,9 +14,7 @@
     <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <ItemDefinitionGroup>
-    <ClCompile>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-    </ClCompile>
+    <ClCompile />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>

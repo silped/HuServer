@@ -75,6 +75,9 @@
     <ClCompile Include="hu\test\impl\TestSingleton.ixx" />
     <ClCompile Include="hu\test\impl\TestTemp.ixx" />
     <ClCompile Include="hu\test\impl\TestUtil.ixx" />
+    <ClCompile Include="hu\test\stress\StressClient.ixx" />
+    <ClCompile Include="hu\test\stress\StressServer.ixx" />
+    <ClCompile Include="hu\test\stress\StressType.ixx" />
     <ClCompile Include="hu\test\TestStart.ixx" />
     <ClCompile Include="hu\test\TestType.ixx" />
     <ClCompile Include="hu\time\Timer.ixx" />

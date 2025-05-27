@@ -11,13 +11,9 @@
     <LibraryPath>$(SolutionDir)_external\lib;$(LibraryPath)</LibraryPath>
     <_PropertySheetDisplayName>HuCommonR</_PropertySheetDisplayName>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration">
-    <EnableASAN>true</EnableASAN>
-  </PropertyGroup>
+  <PropertyGroup Label="Configuration" />
   <ItemDefinitionGroup>
-    <ClCompile>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-    </ClCompile>
+    <ClCompile />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
