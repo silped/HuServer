@@ -57,6 +57,9 @@
     <ClCompile Include="hu\rand\Random.ixx" />
     <ClCompile Include="hu\serial\impl\YasSerializer.ixx" />
     <ClCompile Include="hu\serial\Serializer.ixx" />
+    <ClCompile Include="hu\system\impl\WinSystem.ixx" />
+    <ClCompile Include="hu\system\System.ixx" />
+    <ClCompile Include="hu\system\SystemType.ixx" />
     <ClCompile Include="hu\test\chat\ChatClient.ixx" />
     <ClCompile Include="hu\test\chat\ChatServer.ixx" />
     <ClCompile Include="hu\test\chat\ChatType.ixx" />
@@ -73,6 +76,7 @@
     <ClCompile Include="hu\test\impl\TestRandom.ixx" />
     <ClCompile Include="hu\test\impl\TestSerial.ixx" />
     <ClCompile Include="hu\test\impl\TestSingleton.ixx" />
+    <ClCompile Include="hu\test\impl\TestSystem.ixx" />
     <ClCompile Include="hu\test\impl\TestTemp.ixx" />
     <ClCompile Include="hu\test\impl\TestUtil.ixx" />
     <ClCompile Include="hu\test\stress\StressClient.ixx" />
@@ -93,6 +97,7 @@
     <ClInclude Include="hu\net\client\Client.hpp" />
     <ClInclude Include="hu\net\server\Server.hpp" />
     <ClInclude Include="hu\serial\SerialMacro.hpp" />
+    <ClInclude Include="hu\system\impl\WinSystem.hpp" />
     <ClInclude Include="hu\Type.hpp" />
     <ClInclude Include="hu\TypeMacro.hpp" />
   </ItemGroup>

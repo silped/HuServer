@@ -34,7 +34,7 @@
     <Link />
     <Link>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;zlibd.lib;botan-3.lib;rocksdbd.lib;rocksdb-sharedd.lib;amqpcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;Psapi.lib;zlibd.lib;botan-3.lib;rocksdbd.lib;rocksdb-sharedd.lib;amqpcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>

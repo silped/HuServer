@@ -29,7 +29,7 @@
     <Link />
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;zlib.lib;botan-3.lib;rocksdb.lib;rocksdb-shared.lib;amqpcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;Psapi.lib;zlib.lib;botan-3.lib;rocksdb.lib;rocksdb-shared.lib;amqpcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -106,6 +106,12 @@
     <Filter Include="hu\test\stress">
       <UniqueIdentifier>{2fde9308-ee9c-4c42-9499-2fb797596bb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\system">
+      <UniqueIdentifier>{0c217d35-28d4-4f0b-8e0c-a4409cb12745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\system\impl">
+      <UniqueIdentifier>{f5daa85a-37e7-4db5-9e27-f51fefce5476}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -324,6 +330,18 @@
     <ClCompile Include="hu\test\stress\StressType.ixx">
       <Filter>hu\test\stress</Filter>
     </ClCompile>
+    <ClCompile Include="hu\system\System.ixx">
+      <Filter>hu\system</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\system\impl\WinSystem.ixx">
+      <Filter>hu\system\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\system\SystemType.ixx">
+      <Filter>hu\system</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestSystem.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hu\serial\SerialMacro.hpp">
@@ -355,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="hu\net\server\Server.hpp">
       <Filter>hu\net\server</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\system\impl\WinSystem.hpp">
+      <Filter>hu\system\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
