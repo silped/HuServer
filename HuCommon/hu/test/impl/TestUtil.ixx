@@ -47,5 +47,13 @@ export bool test_util()
     HU_ASSERT_R( util::to_astr( L"Test" ) == "Test" );
     HU_ASSERT_R( util::to_astr( L"가나다라" ) == "가나다라" );
 
+    // WIDE 문자열을 UTF8로 변환한다.
+    const WString str = L"abcd 가나다라 1234";
+    const auto utf8_str = util::to_utf8( str );
+
+    // UTF8을 WIDE 문자열로 변환한다.
+    const WString str2 = util::utf8_to_wstr( utf8_str );
+    HU_ASSERT_R( str2 == str );
+
     return true;
 }

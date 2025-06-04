@@ -164,7 +164,7 @@ private:
         const LocalDBKey& key
     )
     {
-        return util::to_astr( key );
+        return util::to_utf8( key );
     }
 
     // 버퍼를 파라미터로 변환한다.
