@@ -18,9 +18,10 @@ using namespace hu;
 
 export bool test_system()
 {
-    HU_LOG_NDEBUG( _T( "시스템 전체 메모리 = {} MB" ), util::get_total_memory() );
-    HU_LOG_NDEBUG( _T( "시스템 사용 메모리 = {} MB" ), util::get_memory_usage() );
-    HU_LOG_NDEBUG( _T( "프로세스 사용 메모리 = {} MB" ), util::get_process_memory_usage() );
+    HU_LOG_NINFO( _T( "프로세스 아이디 = {}" ), util::get_process_id() );
+    HU_LOG_NINFO( _T( "시스템 전체 메모리 = {} MB" ), util::get_total_memory( kMB ) );
+    HU_LOG_NINFO( _T( "시스템 사용 메모리 = {} GB" ), util::get_memory_usage( kGB ) );
+    HU_LOG_NINFO( _T( "프로세스 사용 메모리 = {} KB" ), util::get_process_memory_usage( kKB ) );
 
     return true;
 }

@@ -10,9 +10,7 @@
     <ExternalIncludePath>$(SolutionDir)_external\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDir)_external\debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration">
-    <EnableASAN>true</EnableASAN>
-  </PropertyGroup>
+  <PropertyGroup Label="Configuration" />
   <ItemDefinitionGroup>
     <ClCompile />
   </ItemDefinitionGroup>
@@ -21,13 +19,14 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4127;4251;4275;4458;4819;4996;5103;5260;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <AdditionalOptions>
       </AdditionalOptions>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;NOMINMAX;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link />
     <Link />

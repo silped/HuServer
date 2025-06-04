@@ -53,8 +53,6 @@ public:
     ) const
     {
         Buffer buf;
-        buf.reserve( T::GetWriteSize( obj ) );
-
         if ( T::Write( obj, buf ) == false )
         {
             Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Key == {})" ), key );
