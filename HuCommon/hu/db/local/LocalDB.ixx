@@ -47,7 +47,7 @@ public:
     // 디비에 객체를 쓴다.
     template <typename T = Serializer>
     bool Write(
-        const LocalDBKey& key,
+        const LocalDBId&  id,
         const auto&       obj,
         const SrcLocation loc = SrcLocation::current()
     ) const
@@ -55,13 +55,15 @@ public:
         Buffer buf;
         if ( T::Write( obj, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Id == {})" ),
+                to_str( id ) );
             return false;
         }
 
-        if ( impl_->Write( key, buf ) == false )
+        if ( impl_->Write( id, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 쓰기 실패 (Key = {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 쓰기 실패 (Id = {})" ),
+                to_str( id ) );
             return false;
         }
 
@@ -71,18 +73,19 @@ public:
     // 디비에서 객체를 읽는다.
     template <typename T = Serializer>
     bool Read(
-        const LocalDBKey& key,
+        const LocalDBId&  id,
         auto&             obj,
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
         Buffer buf;
-        if ( impl_->Read( key, buf ) == false )
+        if ( impl_->Read( id, buf ) == false )
             return false;
 
         if ( T::Read( buf, obj ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 읽기 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 읽기 실패 (Id == {})" ),
+                to_str( id ) );
             return false;
         }
 
@@ -91,13 +94,14 @@ public:
 
     // 디비에서 값을 삭제한다.
     bool Delete(
-        const LocalDBKey& key,
+        const LocalDBId&  id,
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
-        if ( impl_->Delete( key ) == false )
+        if ( impl_->Delete( id ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 삭제 실패 (Key == {})" ), key );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 삭제 실패 (Id == {})" ),
+                to_str( id ) );
             return false;
         }
 
@@ -137,8 +141,8 @@ public:
     {
         if ( config.IsValid() == false )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "설정이 유효하지 않음 (DBName = {})" ),
-                config.name );
+            HU_LOG_ERROR( kLocalDB, _T( "설정이 유효하지 않음 (Table = {})" ),
+                config.table );
             return false;
         }
         
@@ -154,15 +158,15 @@ public:
         impl_ = create_impl( config_ );
         if ( impl_ == nullptr )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "구현체 생성 실패 (DBName = {}, Impl = {})" ),
-                config.name, LocalDBImplTypeInfo::ToStr( config.impl ) );
+            HU_LOG_ERROR( kLocalDB, _T( "구현체 생성 실패 (Table = {}, Impl = {})" ),
+                config.table, LocalDBImplTypeInfo::ToStr( config.impl ) );
             return false;
         }
 
         if ( impl_->Open() == false )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (DBName = {})" ),
-                config.name );
+            HU_LOG_ERROR( kLocalDB, _T( "테이블 열기 실패 (Table = {})" ),
+                config.table );
             return false;
         }
 
@@ -178,7 +182,8 @@ public:
     {
         if ( trans.Init( impl_->CreateTrans( check_rollback ) ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "트랜잭션 생성 실패 (DBName == {})" ), config_.name );
+            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "트랜잭션 생성 실패 (Table == {})" ),
+                config_.table );
             return false;
         }
 

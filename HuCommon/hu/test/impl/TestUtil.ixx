@@ -16,6 +16,17 @@ using namespace hu;
 
 export bool test_util()
 {
+    // 문자열 공백을 제거한다.
+    {
+        AString str = " a b\tc\nd e f ";
+        util::remove_space( str );
+        HU_ASSERT_R( str == "abcdef" );
+
+        WString wstr = L" a b\tc\nd e f ";
+        util::remove_space( wstr );
+        HU_ASSERT_R( wstr == L"abcdef" );
+    }
+
     // 문자열을 배열에 복사한다.
     Char chars[ 256 ] = { 0 };
     util::to_chars( _T( "가나다라" ), chars );
@@ -54,6 +65,17 @@ export bool test_util()
     // UTF8을 WIDE 문자열로 변환한다.
     const WString str2 = util::utf8_to_wstr( utf8_str );
     HU_ASSERT_R( str2 == str );
+
+    // UUID를 생성한다.
+    const auto uuid1 = util::generate_uuid();
+    HU_LOG_NDEBUG( _T( "UUID1 = {}" ), util::utf8_to_str( uuid1 ) );
+
+    // UUID를 다시 생성한다.
+    const auto uuid2 = util::generate_uuid();
+    HU_LOG_NDEBUG( _T( "UUID2 = {}" ), util::utf8_to_str( uuid2 ) );
+
+    // UUID가 서로 다른지 확인한다.
+    HU_ASSERT_R( uuid1 != uuid2 );
 
     return true;
 }

@@ -112,6 +112,12 @@
     <Filter Include="hu\system\impl">
       <UniqueIdentifier>{f5daa85a-37e7-4db5-9e27-f51fefce5476}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\db\nosql">
+      <UniqueIdentifier>{fccaa0c7-cc89-44cf-ae37-8f54019dc337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\db\nosql\impl">
+      <UniqueIdentifier>{22c3361a-9ba0-4348-8ab1-acdcf0f40236}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -342,6 +348,18 @@
     <ClCompile Include="hu\test\impl\TestSystem.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
+    <ClCompile Include="hu\db\nosql\NoSQLDB.ixx">
+      <Filter>hu\db\nosql</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\nosql\NoSQLDBType.ixx">
+      <Filter>hu\db\nosql</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\nosql\impl\MongoDB.ixx">
+      <Filter>hu\db\nosql\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx">
+      <Filter>hu\test\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hu\serial\SerialMacro.hpp">
@@ -376,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="hu\system\impl\WinSystem.hpp">
       <Filter>hu\system\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\db\nosql\NoSQLDB.hpp">
+      <Filter>hu\db\nosql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,9 +19,12 @@ using namespace hu;
 export bool test_local_db()
 {
     LocalDBConfigInfo conf;
+    conf.table = _T( "Serial" );
 
     LocalDB db;
     HU_ASSERT_R( db.Open( conf ) );
+
+    const auto uuid1 = util::generate_uuid();
 
     // 데이터를 쓴다. 성공하면 트랜잭션 선언 범위에서 벗어날때 자동으로 커밋되고 실패하면 자동으로 롤백된다.
     {
@@ -29,10 +32,10 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( _T( "1" ), objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid1, objr ) == false );
 
         SerialInfo objw { 1, _T( "데이터" ), _T( "멤버" ) };
-        HU_ASSERT_R( trans.Write( _T( "1" ), objw ) );
+        HU_ASSERT_R( trans.Write( uuid1, objw ) );
     }
 
     // 데이터를 읽고 다시 삭제한다. 성공하면 트랜잭션 선언 범위에서 벗어날때 자동으로 커밋되고 실패하면 자동으로 롤백된다.
@@ -41,11 +44,13 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( _T( "1" ), obj ) );
+        HU_ASSERT_R( trans.Read( uuid1, obj ) );
         obj.Test();
 
-        trans.Delete( _T( "1" ) );
+        trans.Delete( uuid1 );
     }
+
+    const auto uuid2 = util::generate_uuid();
 
     // 디비 쓰기는 성공 했으나 로직 검사에 실패해서 자동으로 롤백 시킨다.
     {
@@ -61,10 +66,10 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans, check_rollback ) );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( _T( "2" ), objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, objr ) == false );
 
         SerialInfo objw { 2, _T( "데이터2" ), _T( "멤버2" ) };
-        HU_ASSERT_R( trans.Write( _T( "2" ), objw ) );
+        HU_ASSERT_R( trans.Write( uuid2, objw ) );
 
         // 로직 검사를 실패로 설정한다.
         check_logic = false;
@@ -76,7 +81,7 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( _T( "2" ), obj ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, obj ) == false );
     }
 
     return true;

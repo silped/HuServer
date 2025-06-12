@@ -19,7 +19,6 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4127;4251;4275;4458;4819;4996;5103;5260;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <AdditionalOptions>
       </AdditionalOptions>
@@ -27,13 +26,14 @@
       </AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;NOMINMAX;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link />
     <Link />
     <Link />
     <Link>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;Psapi.lib;zlibd.lib;botan-3.lib;rocksdbd.lib;rocksdb-sharedd.lib;amqpcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;Psapi.lib;zlibd.lib;botan-3.lib;rocksdbd.lib;rocksdb-sharedd.lib;amqpcpp.lib;bsoncxx-v_noabi-dhs-x64-v143-mdd.lib;mongocxx-v_noabi-dhs-x64-v143-mdd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>

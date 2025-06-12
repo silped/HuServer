@@ -20,8 +20,6 @@ namespace hu {
 // TODO: Function (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace util {
-
 String to_str(
     const rocksdb::Status& status
 )
@@ -29,8 +27,6 @@ String to_str(
     return util::format_str( _T( "ErrCode = {}, ErrMsg = {}" ),
         static_cast<UInt32>( status.code() ), util::to_str( status.ToString() ) );
 }
-
-} // util
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +66,8 @@ public:
                 {
                     impl_->Rollback();
 
-                    HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 커밋 실패 (DBName = {}, {})" ),
-                        config_.name, util::to_str( status ) );
+                    HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 커밋 실패 (Table = {}, {})" ),
+                        config_.table, to_str( status ) );
                 }
             }
 
@@ -86,18 +82,18 @@ public:
 
 public:
     virtual bool Write(
-        const LocalDBKey& key,
-        const Buffer&     buffer
+        const LocalDBId& id,
+        const Buffer&    buffer
     ) override
     {
-        const auto status = impl_->Put( to_param( key ), to_param( buffer ) );
+        const auto status = impl_->Put( id, to_param( buffer ) );
         if ( status.ok() == false )
         {
             impl_->Rollback();
             util::delete_ptr( impl_ );
 
-            HU_LOG_ERROR( kLocalDB, _T( "디비 쓰기 실패 (DBName = {}, Key = {}, {})" ),
-                config_.name, key, util::to_str( status ) );
+            HU_LOG_ERROR( kLocalDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
+                config_.table, to_str( id ), to_str( status ) );
             return false;
         }
 
@@ -105,20 +101,20 @@ public:
     }
 
     virtual bool Read(
-        const LocalDBKey& key,
-        Buffer&           buffer
+        const LocalDBId& id,
+        Buffer&          buffer
     ) override
     {
         ParamType read_value;
-        const auto status = impl_->Get( read_options_, to_param( key ), &read_value );
+        const auto status = impl_->Get( read_options_, id, &read_value );
         if ( status.ok() == false )
         {
             if ( status.IsNotFound() == false )
             {
                 util::delete_ptr( impl_ );
 
-                HU_LOG_ERROR( kLocalDB, _T( "디비 읽기 실패 (DBName = {}, Key = {}, {})" ),
-                    config_.name, key, util::to_str( status ) );
+                HU_LOG_ERROR( kLocalDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
+                    config_.table, to_str( id ), to_str( status ) );
             }
 
             return false;
@@ -129,10 +125,10 @@ public:
     }
 
     virtual bool Delete(
-        const LocalDBKey& key
+        const LocalDBId& id
     ) override
     {
-        const auto status = impl_->Delete( to_param( key ) );
+        const auto status = impl_->Delete( id );
         if ( status.ok() == false )
         {
             if ( status.IsNotFound() == false )
@@ -140,8 +136,8 @@ public:
                 impl_->Rollback();
                 util::delete_ptr( impl_ );
 
-                HU_LOG_ERROR( kLocalDB, _T( "디비 삭제 실패 (DBName = {}, Key = {}, {})" ),
-                    config_.name, key, util::to_str( status ) );
+                HU_LOG_ERROR( kLocalDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
+                    config_.table, to_str( id ), to_str( status ) );
             }
 
             return false;
@@ -159,14 +155,6 @@ private:
     using ParamType = std::string;
 
 private:
-    // 키를 파라미터로 변환한다.
-    static ParamType to_param(
-        const LocalDBKey& key
-    )
-    {
-        return util::to_utf8( key );
-    }
-
     // 버퍼를 파라미터로 변환한다.
     static ParamType to_param(
         const Buffer& buffer
@@ -217,14 +205,14 @@ public:
 
         AString db_name;
         if ( config_.dir.empty() == false )
-            db_name = util::to_astr( util::format_str( _T( "{}/{}" ), config_.dir, config_.name ) );
+            db_name = util::to_utf8( util::format_str( _T( "{}/{}" ), config_.dir, config_.table ) );
         else
-            db_name = util::to_astr( config_.name );
+            db_name = util::to_utf8( config_.table );
 
         const auto status = rocksdb::TransactionDB::Open( options, trans_db_options, db_name, &impl_ );
         if ( ( status.ok() == false ) || ( impl_ == nullptr ) )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (DBName = {}, {})" ), config_.name, util::to_str( status ) );
+            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (Table = {}, {})" ), config_.table, to_str( status ) );
             return false;
         }
 
@@ -240,8 +228,8 @@ public:
         auto* const trans_impl_ = impl_->BeginTransaction( options );
         if ( trans_impl_ == nullptr )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 시작 실패 (DBName = {})" ),
-                config_.name );
+            HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 시작 실패 (Table = {})" ),
+                config_.table );
             return nullptr;
         }
 

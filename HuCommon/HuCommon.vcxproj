@@ -26,6 +26,9 @@
     <ClCompile Include="hu\db\local\impl\RocksDB.ixx" />
     <ClCompile Include="hu\db\local\LocalDB.ixx" />
     <ClCompile Include="hu\db\local\LocalDBType.ixx" />
+    <ClCompile Include="hu\db\nosql\impl\MongoDB.ixx" />
+    <ClCompile Include="hu\db\nosql\NoSQLDB.ixx" />
+    <ClCompile Include="hu\db\nosql\NoSQLDBType.ixx" />
     <ClCompile Include="hu\io\Console.ixx" />
     <ClCompile Include="hu\log\AsyncLogWriterBase.ixx" />
     <ClCompile Include="hu\log\LogType.ixx" />
@@ -73,6 +76,7 @@
     <ClCompile Include="hu\test\impl\TestExpression.ixx" />
     <ClCompile Include="hu\test\impl\TestLocalDB.ixx" />
     <ClCompile Include="hu\test\impl\TestLog.ixx" />
+    <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx" />
     <ClCompile Include="hu\test\impl\TestRandom.ixx" />
     <ClCompile Include="hu\test\impl\TestSerial.ixx" />
     <ClCompile Include="hu\test\impl\TestSingleton.ixx" />
@@ -92,6 +96,7 @@
     <ClInclude Include="hu\Core.hpp" />
     <ClInclude Include="hu\crypt\Crypt.hpp" />
     <ClInclude Include="hu\db\local\LocalDB.hpp" />
+    <ClInclude Include="hu\db\nosql\NoSQLDB.hpp" />
     <ClInclude Include="hu\log\Log.hpp" />
     <ClInclude Include="hu\log\LogMacro.hpp" />
     <ClInclude Include="hu\net\client\Client.hpp" />
