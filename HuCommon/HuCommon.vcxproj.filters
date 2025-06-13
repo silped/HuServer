@@ -76,15 +76,6 @@
     <Filter Include="_external">
       <UniqueIdentifier>{7456c8be-0eeb-4516-ac60-2a1ab5306aed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_external\yas">
-      <UniqueIdentifier>{c212a7f3-9e53-4c58-a8da-9273a0995bba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_external\yas\detail">
-      <UniqueIdentifier>{7f3c42fa-e03d-442a-a61e-9f348d151d72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_external\yas\detail\io">
-      <UniqueIdentifier>{d73929aa-a109-4903-9803-88e9bd966867}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hu\amqp">
       <UniqueIdentifier>{b8f95ff9-8d88-4ce3-b219-8c832b83375e}</UniqueIdentifier>
     </Filter>
@@ -117,6 +108,15 @@
     </Filter>
     <Filter Include="hu\db\nosql\impl">
       <UniqueIdentifier>{22c3361a-9ba0-4348-8ab1-acdcf0f40236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas">
+      <UniqueIdentifier>{7ffd33ed-9b87-4647-a436-a70d58276a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas\detail">
+      <UniqueIdentifier>{163f6551-4ad6-42f2-8403-8ff8b4fc31a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_external\yas\detail\io">
+      <UniqueIdentifier>{b66b82e3-4506-4d09-84df-27d5385fc1f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -276,9 +276,6 @@
     <ClCompile Include="hu\test\TestType.ixx">
       <Filter>hu\test</Filter>
     </ClCompile>
-    <ClCompile Include="..\_external\include\yas\detail\io\header.cpp">
-      <Filter>_external\yas\detail\io</Filter>
-    </ClCompile>
     <ClCompile Include="hu\amqp\AMQP.ixx">
       <Filter>hu\amqp</Filter>
     </ClCompile>
@@ -359,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx">
       <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows-hu\include\yas\detail\io\header.cpp">
+      <Filter>_external\yas\detail\io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

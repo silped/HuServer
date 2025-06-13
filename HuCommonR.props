@@ -7,8 +7,8 @@
     <IntDir>$(SolutionDir)_build\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>.\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)_external\include;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>$(SolutionDir)_external\lib;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>$(SolutionDir)_external\include;$(SolutionDir)_external\vcpkg-master\installed\x64-windows-hu\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)_external\lib\$(Configuration);$(SolutionDir)_external\vcpkg-master\installed\x64-windows-hu\lib;$(LibraryPath)</LibraryPath>
     <_PropertySheetDisplayName>HuCommonR</_PropertySheetDisplayName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" />
@@ -29,7 +29,7 @@
     <Link />
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;Psapi.lib;zlib.lib;botan-3.lib;rocksdb.lib;rocksdb-shared.lib;amqpcpp.lib;bsoncxx-v_noabi-rhs-x64-v143-md.lib;mongocxx-v_noabi-rhs-x64-v143-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;Rpcrt4.lib;zlib.lib;botan-3.lib;rocksdb.lib;amqpcpp.lib;bsoncxx-v_noabi-rhs-x64-v143-md.lib;mongocxx-v_noabi-rhs-x64-v143-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

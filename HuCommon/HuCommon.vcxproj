@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\_external\include\yas\detail\io\header.cpp" />
+    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows-hu\include\yas\detail\io\header.cpp" />
     <ClCompile Include="hu\amqp\AMQP.ixx" />
     <ClCompile Include="hu\amqp\AMQPType.ixx" />
     <ClCompile Include="hu\amqp\impl\AMQPCpp.ixx" />
