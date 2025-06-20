@@ -6,7 +6,7 @@ C++20 모듈 등 최신 기능을 모두 활용하여 구현된 매우 현대화
 
 1. 설치 방법 :
 - 먼저 아래 경로에서 HuServerLib.zip 파일을 받고 소스와 같은 경로에 압축을 풀어 주세요.
-- https://drive.google.com/file/d/1-5EwblE_wIujAMFZf_7_cGdWGWrHJgI8/view?usp=sharing
+- https://drive.google.com/file/d/1sr_i4-c1bSmU8SV9_n9WMHuIu1u1YyxM/view?usp=sharing
 
 2. 사용법 :
 - 다음 경로에서 각종 클라이언트, 서버 구현과 내부 기능들 사용 예제를 찾을 수 있습니다. 
@@ -22,7 +22,10 @@ C++20 모듈 등 최신 기능을 모두 활용하여 구현된 매우 현대화
 - 네트워크 : ASIO
 - 암호화 : Botan
 - 직렬화 : YAS
-- 데이터베이스 : RocksDB
+- 로컬 데이터베이스 : RocksDB
+- NoSQL 데이터베이스 : MongoDB
+- 관계형 데이터베이스 : MySQL X DevAPI
+- RabbitMQ : AMQPCpp
 
 5. 빌드 환경 :
 - 코드 베이스는 멀티 플랫폼이지만 현재 빌드 세팅은 VS2022 최신 버전만 제공합니다.
