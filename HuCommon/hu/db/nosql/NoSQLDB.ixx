@@ -77,7 +77,7 @@ public:
             return false;
         }
 
-        if ( impl_->Write( T::kTypeName, id, buf ) == false )
+        if ( impl_->Write( T::kTypeNameA, id, buf ) == false )
         {
             Log::Inst().Write( loc, LogType::kError, kNoSQLDB, _T( "디비 쓰기 실패 (Table = {}, Id = {})" ),
                 T::kTypeName, to_str( id ) );
@@ -96,7 +96,7 @@ public:
     ) const
     {
         Buffer buf;
-        if ( impl_->Read( T::kTypeName, id, buf ) == false )
+        if ( impl_->Read( T::kTypeNameA, id, buf ) == false )
             return false;
 
         if ( JsonSerializer::Read( buf, obj ) == false )
@@ -118,7 +118,7 @@ public:
     ) const
     {
         NoSQLReadListResult res;
-        if ( impl_->ReadList( T::kTypeName, id_set, res ) <= 0 )
+        if ( impl_->ReadList( T::kTypeNameA, id_set, res ) <= 0 )
             return 0;
 
         for ( const auto& [ id, buf ] : res )
@@ -144,7 +144,7 @@ public:
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
-        if ( impl_->Delete( T::kTypeName, id ) == false )
+        if ( impl_->Delete( T::kTypeNameA, id ) == false )
         {
             Log::Inst().Write( loc, LogType::kError, kNoSQLDB, _T( "디비 삭제 실패 (Table = {}, Id == {})" ),
                 T::kTypeName, to_str( id ) );

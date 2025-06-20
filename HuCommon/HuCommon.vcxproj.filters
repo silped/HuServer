@@ -118,6 +118,12 @@
     <Filter Include="_external\yas\detail\io">
       <UniqueIdentifier>{b66b82e3-4506-4d09-84df-27d5385fc1f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\db\rdb">
+      <UniqueIdentifier>{79248630-a558-4ed4-b7ba-16286b316d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hu\db\rdb\impl">
+      <UniqueIdentifier>{143374de-394a-4b28-85b5-c34fe0ed02c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -357,8 +363,20 @@
     <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows-hu\include\yas\detail\io\header.cpp">
+    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows\include\yas\detail\io\header.cpp">
       <Filter>_external\yas\detail\io</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\rdb\RDB.ixx">
+      <Filter>hu\db\rdb</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\rdb\RDBType.ixx">
+      <Filter>hu\db\rdb</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\rdb\impl\MySQL.ixx">
+      <Filter>hu\db\rdb\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\impl\TestRDB.ixx">
+      <Filter>hu\test\impl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="hu\db\nosql\NoSQLDB.hpp">
       <Filter>hu\db\nosql</Filter>
+    </ClInclude>
+    <ClInclude Include="hu\db\rdb\RDB.hpp">
+      <Filter>hu\db\rdb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

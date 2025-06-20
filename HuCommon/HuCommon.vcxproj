@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows-hu\include\yas\detail\io\header.cpp" />
+    <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows\include\yas\detail\io\header.cpp" />
     <ClCompile Include="hu\amqp\AMQP.ixx" />
     <ClCompile Include="hu\amqp\AMQPType.ixx" />
     <ClCompile Include="hu\amqp\impl\AMQPCpp.ixx" />
@@ -29,6 +29,9 @@
     <ClCompile Include="hu\db\nosql\impl\MongoDB.ixx" />
     <ClCompile Include="hu\db\nosql\NoSQLDB.ixx" />
     <ClCompile Include="hu\db\nosql\NoSQLDBType.ixx" />
+    <ClCompile Include="hu\db\rdb\impl\MySQL.ixx" />
+    <ClCompile Include="hu\db\rdb\RDB.ixx" />
+    <ClCompile Include="hu\db\rdb\RDBType.ixx" />
     <ClCompile Include="hu\io\Console.ixx" />
     <ClCompile Include="hu\log\AsyncLogWriterBase.ixx" />
     <ClCompile Include="hu\log\LogType.ixx" />
@@ -78,6 +81,7 @@
     <ClCompile Include="hu\test\impl\TestLog.ixx" />
     <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx" />
     <ClCompile Include="hu\test\impl\TestRandom.ixx" />
+    <ClCompile Include="hu\test\impl\TestRDB.ixx" />
     <ClCompile Include="hu\test\impl\TestSerial.ixx" />
     <ClCompile Include="hu\test\impl\TestSingleton.ixx" />
     <ClCompile Include="hu\test\impl\TestSystem.ixx" />
@@ -97,6 +101,7 @@
     <ClInclude Include="hu\crypt\Crypt.hpp" />
     <ClInclude Include="hu\db\local\LocalDB.hpp" />
     <ClInclude Include="hu\db\nosql\NoSQLDB.hpp" />
+    <ClInclude Include="hu\db\rdb\RDB.hpp" />
     <ClInclude Include="hu\log\Log.hpp" />
     <ClInclude Include="hu\log\LogMacro.hpp" />
     <ClInclude Include="hu\net\client\Client.hpp" />

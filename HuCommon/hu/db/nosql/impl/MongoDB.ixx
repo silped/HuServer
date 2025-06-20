@@ -72,16 +72,16 @@ public:
         catch ( const std::exception& e )
         {
             HU_LOG_ERROR( kNoSQLDB, _T( "연결 실패 (Uri = {}, Error = {})" ),
-                uri_str, util::utf8_to_str( e.what() ) );
+                uri_str, to_str( e.what() ) );
         }
 
         return false;
     }
 
     virtual bool Write(
-        const String&    table,
-        const NoSQLDBId& id,
-        const Buffer&    buffer
+        const NoSQLTableName& table,
+        const NoSQLDBId&      id,
+        const Buffer&         buffer
     ) override
     {
         if ( table.empty() || id.empty() || buffer.empty() )
@@ -89,7 +89,7 @@ public:
 
         try
         {
-            auto coll = db_[ to_param( table ) ];
+            auto coll = db_[ table ];
 
             const auto result = coll.update_one(
                 Bson::make_document( Bson::kvp( kId, id ) ),
@@ -101,16 +101,16 @@ public:
         catch ( const std::exception& e )
         {
             HU_LOG_ERROR( kNoSQLDB, _T( "쓰기 실패 (Table = {}, Id = {}, Error = {}" ),
-                table, util::utf8_to_str( id ), util::utf8_to_str( e.what() ) );
+                to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
         return false;
     }
 
     virtual bool Read(
-        const String&    table,
-        const NoSQLDBId& id,
-        Buffer&          buffer
+        const NoSQLTableName& table,
+        const NoSQLDBId&      id,
+        Buffer&               buffer
     ) override
     {
         if ( table.empty() || id.empty() )
@@ -118,11 +118,10 @@ public:
 
         try
         {
-            const auto table_param = to_param( table );
-            if ( db_.has_collection( table_param ) == false )
+            if ( db_.has_collection( table ) == false )
                 return false;
 
-            auto coll = db_[ table_param ];
+            auto coll = db_[ table ];
 
             const auto res = coll.find_one( Bson::make_document( Bson::kvp( kId, id ) ) );
             if ( res )
@@ -136,16 +135,16 @@ public:
         catch ( const std::exception& e )
         {
             HU_LOG_ERROR( kNoSQLDB, _T( "읽기 실패 (Table = {}, Id = {}, Error = {})" ),
-                table, util::utf8_to_str( id ), util::utf8_to_str( e.what() ) );
+                to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
         return false;
     }
 
     virtual Size ReadList(
-        const String&        table,
-        const NoSQLDBIdSet&  id_set,
-        NoSQLReadListResult& result
+        const NoSQLTableName& table,
+        const NoSQLDBIdSet&   id_set,
+        NoSQLReadListResult&  result
     ) override
     {
         if ( table.empty() || id_set.empty() )
@@ -153,19 +152,15 @@ public:
 
         try
         {
-            const auto table_param = to_param( table );
-            if ( db_.has_collection( table_param ) == false )
+            if ( db_.has_collection( table ) == false )
                 return 0;
 
             Bson::array ids;
             for ( const auto& id : id_set )
                 ids.append( id );
 
-            auto coll = db_[ table_param ];
-
-            auto cursor = coll.find( Bson::make_document( 
-                Bson::kvp( kId, Bson::make_document( Bson::kvp( kIn, ids ) ) )
-            ) );
+            auto coll = db_[ table ];
+            auto cursor = coll.find( Bson::make_document( Bson::kvp( kId, Bson::make_document( Bson::kvp( kIn, ids ) ) ) ) );
 
             for ( const auto& doc : cursor )
             {
@@ -179,15 +174,15 @@ public:
         catch ( const std::exception& e )
         {
             HU_LOG_ERROR( kNoSQLDB, _T( "목록 읽기 실패 (Table = {}, Error = {})" ),
-                table, util::utf8_to_str( e.what() ) );
+                to_str( table ), to_str( e.what() ) );
         }
 
         return 0;
     }
 
     virtual bool Delete(
-        const String&    table,
-        const NoSQLDBId& id
+        const NoSQLTableName& table,
+        const NoSQLDBId&      id
     ) override
     {
         if ( table.empty() || id.empty() )
@@ -195,11 +190,10 @@ public:
 
         try
         {
-            const auto table_param = to_param( table );
-            if ( db_.has_collection( table_param ) == false )
+            if ( db_.has_collection( table ) == false )
                 return false;
 
-            auto coll = db_[ table_param ];
+            auto coll = db_[ table ];
 
             auto res = coll.delete_one( Bson::make_document( Bson::kvp( kId, id ) ) );
             if ( res && ( res->deleted_count() > 0 ) )
@@ -208,7 +202,7 @@ public:
         catch ( const std::exception& e )
         {
             HU_LOG_ERROR( kNoSQLDB, _T( "삭제 실패 (Table = {}, Id = {}, Error = {})" ),
-                table, util::utf8_to_str( id ), util::utf8_to_str( e.what() ) );
+                to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
         return false;
