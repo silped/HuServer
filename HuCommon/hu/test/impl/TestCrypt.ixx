@@ -50,7 +50,7 @@ export bool test_crypt()
 
         // 받은 메시지를 만든다.
         Message recv_msg;
-        recv_msg.Init( SerialInfo::kType, req_msg.GetBuffer() );
+        recv_msg.Init( SerialInfo::kTypeId, req_msg.GetBuffer() );
 
         // 받은 메시지를 복호화 한다.
         recv_crypt.Decrypt( recv_msg.GetBuffer() );

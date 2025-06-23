@@ -35,7 +35,7 @@ struct SerialMemberInfo
         data.clear();
     }
 
-    HU_SERIAL_MEMBER( SerialMemberInfo, data );
+    HU_USE_SERIAL( SerialMemberInfo, data );
 };
 
 // 직렬화 가능 객체
@@ -64,7 +64,7 @@ export struct SerialInfo
     }
 
     // 직렬화 사용을 선언한다.
-    HU_SERIAL_MEMBER( SerialInfo, id, data, member );
+    HU_USE_SERIAL( SerialInfo, id, data, member );
 };
 
 // 직렬화 가능 객체는 비상속, 기본 생성 소멸자의 복사 가능한 플레인 객체를 사용한다.
