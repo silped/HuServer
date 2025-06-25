@@ -72,6 +72,9 @@
     <ClCompile Include="hu\test\echo\EchoClient.ixx" />
     <ClCompile Include="hu\test\echo\EchoServer.ixx" />
     <ClCompile Include="hu\test\echo\EchoType.ixx" />
+    <ClCompile Include="hu\test\game\GameClient.ixx" />
+    <ClCompile Include="hu\test\game\GameServer.ixx" />
+    <ClCompile Include="hu\test\game\GameType.ixx" />
     <ClCompile Include="hu\test\impl\TestAMQP.ixx" />
     <ClCompile Include="hu\test\impl\TestAutoQueue.ixx" />
     <ClCompile Include="hu\test\impl\TestConsole.ixx" />

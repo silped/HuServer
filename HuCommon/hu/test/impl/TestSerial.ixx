@@ -82,5 +82,8 @@ export bool test_serial()
         target.Test();
     }
 
+    // 직렬화된 객체를 문자열로 변환한다.
+    HU_LOG_NDEBUG( _T( "객체 문자열 ({})" ), util::to_str( src ) );
+
     return true;
 }

@@ -65,7 +65,7 @@ struct MySQLStateInfo final : private INoCopy
     std::unique_ptr<SQLDB> db;
 
     // 트랜잭션 생성 여부
-    ABool create_trans { false };
+    AtomBool create_trans { false };
 
     // 유효한지 검사한다.
     bool IsValid() const

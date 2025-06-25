@@ -124,6 +124,9 @@
     <Filter Include="hu\db\rdb\impl">
       <UniqueIdentifier>{143374de-394a-4b28-85b5-c34fe0ed02c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hu\test\game">
+      <UniqueIdentifier>{41d2dc36-85b7-4590-8506-e78ba3f2161a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hu\test\TestStart.ixx">
@@ -377,6 +380,15 @@
     </ClCompile>
     <ClCompile Include="hu\test\impl\TestRDB.ixx">
       <Filter>hu\test\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\game\GameClient.ixx">
+      <Filter>hu\test\game</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\game\GameServer.ixx">
+      <Filter>hu\test\game</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\test\game\GameType.ixx">
+      <Filter>hu\test\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

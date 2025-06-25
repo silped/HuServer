@@ -125,7 +125,7 @@ public:
         if ( check_message_size( size ) == false )
             return false;
 
-        msg.Init( info_.GetMessageId(), size );
+        msg.Init( info_.GetMessageId(), size, config_.debug_msg );
         return true;
     }
 
