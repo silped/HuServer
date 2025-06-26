@@ -25,7 +25,10 @@ export bool test_local_db()
     {
         LocalDBConfigInfo conf;
         {
-            conf.table = _T( "Serial" );
+            conf.dir = _T( "_db" );
+            conf.db  = _T( "hu_db" );
+
+            conf.AddTable<SerialInfo>();
         }
         HU_ASSERT_R( db.Connect( conf ) );
     }
@@ -53,7 +56,7 @@ export bool test_local_db()
         HU_ASSERT_R( trans.Read( uuid1, obj ) );
         obj.Test();
 
-        trans.Delete( uuid1 );
+        trans.Delete<SerialInfo>( uuid1 );
     }
 
     const auto uuid2 = util::generate_uuid();

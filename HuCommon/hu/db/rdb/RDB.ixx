@@ -162,13 +162,6 @@ public:
         return true;
     }
 
-    // 테이블을 생성한다.
-    template <SerialType T>
-    bool CreateTable()
-    {
-        return impl_->CreateTable( T::kTypeNameA );
-    }
-
     // 트랜잭션을 생성한다.
     bool CreateTrans(
         RDBTrans&              trans,

@@ -29,13 +29,13 @@ export bool test_rdb()
             conf.port     = 33060;
             conf.user     = _T( "hu_user" );
             conf.password = _T( "hu_user_pw" );
-            conf.db       = _T( "hudb" );
+            conf.db       = _T( "hu_db" );
+
+            // 사용할 테이블을 설정한다.
+            conf.AddTable<SerialInfo>();
         }
         HU_ASSERT_R( db.Connect( conf ) );
     }
-
-    // 테이블을 생성한다.
-    HU_ASSERT_R( db.CreateTable<SerialInfo>() );
 
     const auto uuid1 = util::generate_uuid();
 
