@@ -240,14 +240,8 @@
     <ClCompile Include="hu\container\LockFreeQueue.ixx">
       <Filter>hu\container</Filter>
     </ClCompile>
-    <ClCompile Include="hu\db\local\LocalDB.ixx">
-      <Filter>hu\db\local</Filter>
-    </ClCompile>
     <ClCompile Include="hu\db\local\impl\RocksDB.ixx">
       <Filter>hu\db\local\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\db\local\LocalDBType.ixx">
-      <Filter>hu\db\local</Filter>
     </ClCompile>
     <ClCompile Include="hu\test\impl\TestAutoQueue.ixx">
       <Filter>hu\test\impl</Filter>
@@ -369,12 +363,6 @@
     <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows\include\yas\detail\io\header.cpp">
       <Filter>_external\yas\detail\io</Filter>
     </ClCompile>
-    <ClCompile Include="hu\db\rdb\RDB.ixx">
-      <Filter>hu\db\rdb</Filter>
-    </ClCompile>
-    <ClCompile Include="hu\db\rdb\RDBType.ixx">
-      <Filter>hu\db\rdb</Filter>
-    </ClCompile>
     <ClCompile Include="hu\db\rdb\impl\MySQL.ixx">
       <Filter>hu\db\rdb\impl</Filter>
     </ClCompile>
@@ -389,6 +377,12 @@
     </ClCompile>
     <ClCompile Include="hu\test\game\GameType.ixx">
       <Filter>hu\test\game</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\DB.ixx">
+      <Filter>hu\db</Filter>
+    </ClCompile>
+    <ClCompile Include="hu\db\DBType.ixx">
+      <Filter>hu\db</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,9 +407,6 @@
     <ClInclude Include="hu\crypt\Crypt.hpp">
       <Filter>hu\crypt</Filter>
     </ClInclude>
-    <ClInclude Include="hu\db\local\LocalDB.hpp">
-      <Filter>hu\db\local</Filter>
-    </ClInclude>
     <ClInclude Include="hu\net\client\Client.hpp">
       <Filter>hu\net\client</Filter>
     </ClInclude>
@@ -428,8 +419,8 @@
     <ClInclude Include="hu\db\nosql\NoSQLDB.hpp">
       <Filter>hu\db\nosql</Filter>
     </ClInclude>
-    <ClInclude Include="hu\db\rdb\RDB.hpp">
-      <Filter>hu\db\rdb</Filter>
+    <ClInclude Include="hu\db\DB.hpp">
+      <Filter>hu\db</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

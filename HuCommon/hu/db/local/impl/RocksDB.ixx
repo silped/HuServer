@@ -5,7 +5,9 @@
 // TODO: Import (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.db.local.LocalDBType;
+import <filesystem>;
+
+import hu.db.DBType;
 
 import <rocksdb/db.h>;
 import <rocksdb/options.h>;
@@ -16,34 +18,19 @@ import "hu/Core.hpp";
 
 namespace hu {
 
-using ParamType      = AString;
-using TableHandleMap = std::map<LocalDBTableName, rocksdb::ColumnFamilyHandle*>;
+using TableHandleMap = std::map<DBTableName, rocksdb::ColumnFamilyHandle*>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: Function (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ParamType to_param(
-    const Buffer& buffer
-)
-{
-    return ParamType( buffer.cbegin(), buffer.cend() );
-}
-
-ParamType to_param(
-    const String& str
-)
-{
-    return util::to_utf8( str );
-}
-
 String to_str(
     const rocksdb::Status& status
 )
 {
     return util::format_str( _T( "ErrCode = {}, ErrMsg = {}" ),
-        static_cast<UInt32>( status.code() ), util::to_str( status.ToString() ) );
+        static_cast<UInt32>( status.code() ), to_str( status.ToString() ) );
 }
 
 
@@ -51,7 +38,7 @@ String to_str(
 // TODO: Class (RocksDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
  
-class RocksDBTrans final : public LocalDBTransBase
+class RocksDBTrans final : public DBTransBase
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (RocksDBTrans)
@@ -59,14 +46,14 @@ class RocksDBTrans final : public LocalDBTransBase
 
 public:
     RocksDBTrans(
-        const LocalDBConfigInfo&    config,
-        const LocalDBCheckRollback& check_rollback,
+        const DBConfigInfo&         config,
+        const DBRollback&           rollback,
         rocksdb::Transaction* const impl,
         const TableHandleMap&       table_handles
     ) :
-        LocalDBTransBase ( config, check_rollback ),
-        impl_            ( impl ),
-        table_handles_   ( table_handles )
+        DBTransBase    ( config, rollback ),
+        impl_          ( impl ),
+        table_handles_ ( table_handles )
     {
     }
 
@@ -74,7 +61,7 @@ public:
     {
         if ( impl_ )
         {
-            if ( check_rollback_ && check_rollback_() )
+            if ( rollback_ && rollback_() )
             {
                 impl_->Rollback();
             }
@@ -85,8 +72,8 @@ public:
                 {
                     impl_->Rollback();
 
-                    HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 커밋 실패 (Table = {}, {})" ),
-                        config_.db, to_str( status ) );
+                    HU_LOG_ERROR( kDB, _T( "트랜잭션 커밋 실패 ({}, {})" ),
+                        config_.ToStr(), to_str( status ) );
                 }
             }
 
@@ -101,22 +88,22 @@ public:
 
 public:
     virtual bool Write(
-        const LocalDBTableName& table,
-        const LocalDBId&        id,
-        const Buffer&           buffer
+        const DBTableName& table_name,
+        const DBId&        id,
+        const Buffer&      buffer
     ) override
     {
         if ( impl_ )
         {
-            auto handle = find_table_handle( table );
+            auto handle = find_handle( table_name );
             if ( handle )
             {
                 const auto status = impl_->Put( handle, id, to_param( buffer ) );
                 if ( status.ok() )
                     return true;
 
-                HU_LOG_ERROR( kLocalDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
-                    to_str( table ), to_str( id ), to_str( status ) );
+                HU_LOG_ERROR( kDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
+                    to_str( table_name ), to_str( id ), to_str( status ) );
             }
 
             impl_->Rollback();
@@ -127,30 +114,30 @@ public:
     }
 
     virtual bool Read(
-        const LocalDBTableName& table,
-        const LocalDBId&        id,
-        Buffer&                 buffer
+        const DBTableName& table_name,
+        const DBId&        id,
+        Buffer&            buffer
     ) override
     {
         if ( impl_ )
         {
-            auto handle = find_table_handle( table );
+            auto handle = find_handle( table_name );
             if ( handle )
             {
-                ParamType value;
+                DBParamType param;
 
-                const auto status = impl_->Get( read_options_, handle, id, &value );
+                const auto status = impl_->Get( read_options_, handle, id, &param );
                 if ( status.ok() )
                 {
-                    buffer.assign( value.begin(), value.end() );
+                    to_buffer( param, buffer );
                     return true;
                 }
 
                 if ( status.IsNotFound() )
                     return false;
 
-                HU_LOG_ERROR( kLocalDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
-                    to_str( table ), to_str( id ), to_str( status ) );
+                HU_LOG_ERROR( kDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
+                    to_str( table_name ), to_str( id ), to_str( status ) );
             }
 
             impl_->Rollback();
@@ -161,13 +148,13 @@ public:
     }
 
     virtual bool Delete(
-        const LocalDBTableName& table,
-        const LocalDBId&        id
+        const DBTableName& table_name,
+        const DBId&        id
     ) override
     {
         if ( impl_ )
         {
-            auto handle = find_table_handle( table );
+            auto handle = find_handle( table_name );
             if ( handle )
             {
                 const auto status = impl_->Delete( handle, id );
@@ -177,8 +164,8 @@ public:
                 if ( status.IsNotFound() )
                     return false;
 
-                HU_LOG_ERROR( kLocalDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
-                    to_str( table ), to_str( id ), to_str( status ) );
+                HU_LOG_ERROR( kDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
+                    to_str( table_name ), to_str( id ), to_str( status ) );
             }
 
             impl_->Rollback();
@@ -194,20 +181,17 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    
-
-private:
-    rocksdb::ColumnFamilyHandle* find_table_handle(
-        const LocalDBTableName& table,
-        const SrcLocation       loc = SrcLocation::current()
+    rocksdb::ColumnFamilyHandle* find_handle(
+        const DBTableName& table_name,
+        const SrcLocation  loc = SrcLocation::current()
     ) const
     {
-        const auto it = table_handles_.find( table );
+        const auto it = table_handles_.find( table_name );
         if ( it != table_handles_.end() )
             return it->second;
 
-        util::log_error( loc, kLocalDB, _T( "테이블 찾기 실패 (Table = {})" ),
-            to_str( table ) );
+        util::log_error( loc, kDB, _T( "테이블 찾기 실패 (Table = {})" ),
+            to_str( table_name ) );
         return nullptr;
     }
 
@@ -217,7 +201,7 @@ private:
     const TableHandleMap& table_handles_;
 };
 
-export class RocksDB final : public LocalDBBase
+export class RocksDB final : public DBBase
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (RocksDB)
@@ -225,9 +209,9 @@ export class RocksDB final : public LocalDBBase
 
 public:
     explicit RocksDB(
-        const LocalDBConfigInfo& config
+        const DBConfigInfo& config
     ) :
-        LocalDBBase( config )
+        DBBase( config )
     {
     }
 
@@ -238,7 +222,10 @@ public:
             for ( const auto& [ table, handle ] : table_handles_ )
             {
                 if ( const auto status = impl_->DestroyColumnFamilyHandle( handle ); status.ok() == false )
-                    HU_LOG_ERROR( kLocalDB, _T( "Table handle 해제 실패 (Table = {}, {})" ), to_str( table ), to_str( status ) );
+                {
+                    HU_LOG_ERROR( kDB, _T( "테이블 핸들 해제 실패 (Table = {}, {})" ),
+                        to_str( table ), to_str( status ) );
+                }
             }
 
             util::delete_ptr( impl_ );
@@ -251,7 +238,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    virtual bool Open() override
+    virtual bool Connect() override
     {
         rocksdb::Options options;
         {
@@ -261,19 +248,28 @@ public:
 
         rocksdb::TransactionDBOptions trans_db_options;
 
-        ParamType db_name;
+        DBParamType db_name;
         if ( config_.dir.empty() == false )
+        {
+            const String dir_path { util::format_str( _T( "{}/{}/" ), util::get_cur_path_str(), config_.dir ) };
+            if ( std::filesystem::exists( dir_path ) == false )
+                std::filesystem::create_directory( dir_path );
+
             db_name = to_param( util::format_str( _T( "{}/{}" ), config_.dir, config_.db ) );
+        }
         else
+        {
             db_name = to_param( config_.db );
+        }
 
         std::vector<rocksdb::ColumnFamilyDescriptor> table_descs;
         {
-            std::vector<ParamType> table_names;
+            std::vector<DBParamType> table_names;
             const auto status = rocksdb::DB::ListColumnFamilies( options, db_name, &table_names );
             if ( ( status.ok() == false ) && ( status.IsNotFound() == false ) && ( status.IsPathNotFound() == false ) )
             {
-                HU_LOG_ERROR( kLocalDB, _T( "테이블 목록 읽기 실패 (DB = {}, {})" ), config_.db, to_str( status ) );
+                HU_LOG_ERROR( kDB, _T( "테이블 목록 읽기 실패 ({}, {})" ),
+                    config_.ToStr(), to_str( status ) );
                 return false;
             }
 
@@ -291,7 +287,8 @@ public:
         const auto status = rocksdb::TransactionDB::Open( options, trans_db_options, db_name, table_descs, &table_handles, &impl_ );
         if ( ( status.ok() == false ) || ( impl_ == nullptr ) )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "디비 열기 실패 (DB = {}, {})" ), config_.db, to_str( status ) );
+            HU_LOG_ERROR( kDB, _T( "디비 열기 실패 ({}, {})" ),
+                config_.ToStr(), to_str( status ) );
             return false;
         }
 
@@ -302,7 +299,8 @@ public:
             auto* const table_handle = table_handles[ i ];
             if ( table_handle == nullptr )
             {
-                HU_LOG_ERROR( kLocalDB, _T( "테이블 핸들 생성 실패 (Table = {})" ), to_str( table ) );
+                HU_LOG_ERROR( kDB, _T( "테이블 핸들 생성 실패 (Table = {})" ),
+                    to_str( table ) );
                 return false;
             }
 
@@ -312,8 +310,8 @@ public:
         return true;
     }
 
-    virtual LocalDBTransImpl CreateTrans(
-        const LocalDBCheckRollback& check_rollback
+    virtual DBTransImpl CreateTrans(
+        const DBRollback& rollback
     ) override
     {
         rocksdb::WriteOptions options;
@@ -321,12 +319,12 @@ public:
         auto* const trans_impl_ = impl_->BeginTransaction( options );
         if ( trans_impl_ == nullptr )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "트랜잭션 시작 실패 (DB = {})" ),
-                config_.db );
+            HU_LOG_ERROR( kDB, _T( "트랜잭션 시작 실패 ({})" ),
+                config_.ToStr() );
             return nullptr;
         }
 
-        return std::make_unique<RocksDBTrans>( config_, check_rollback, trans_impl_, table_handles_ );
+        return std::make_unique<RocksDBTrans>( config_, rollback, trans_impl_, table_handles_ );
     }
 
 

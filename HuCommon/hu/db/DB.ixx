@@ -1,40 +1,40 @@
-﻿export module hu.db.local.LocalDB;
+﻿export module hu.db.DB;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Import (LocalDB)
+// TODO: Import (DB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import <filesystem>;
-
+import hu.db.rdb.impl.MySQL;
 import hu.db.local.impl.RocksDB;
-import hu.db.local.LocalDBType;
+import hu.db.DBType;
 
 import "hu/Core.hpp";
 
 
 namespace hu {
 
-// 로컬 디비 트랜잭션을 구현한 클래스
-export class LocalDBTrans final : private INoCopy
+// 트랜잭션을 구현한 클래스
+export template <typename T>
+class DBTrans final : private INoCopy
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Constructor & Destructor (LocalDBTransaction)
+    // TODO: Constructor & Destructor (DBTrans)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    LocalDBTrans() = default;
-    ~LocalDBTrans() = default;
+    DBTrans() = default;
+    ~DBTrans() = default;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Public (LocalDBTransaction)
+    // TODO: Public (DBTrans)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
     // 초기화 한다.
     bool Init(
-        LocalDBTransImpl&& impl
+        DBTransImpl&& impl
     )
     {
         if ( impl == nullptr )
@@ -45,24 +45,24 @@ public:
     }
 
     // 디비에 객체를 쓴다.
-    template <SerialType T>
+    template <SerialType OBJ_T>
     bool Write(
-        const LocalDBId&  id,
-        const T&          obj,
+        const DBId&       id,
+        const OBJ_T&      obj,
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
         Buffer buf;
-        if ( BinSerializer::Write( obj, buf ) == false )
+        if ( T::Write( obj, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 쓰기 실패 (Id == {})" ),
+            Log::Inst().Write( loc, LogType::kError, kDB, _T( "객체 버퍼 쓰기 실패 (Id == {})" ),
                 to_str( id ) );
             return false;
         }
 
-        if ( impl_->Write( T::kTypeNameA, id, buf ) == false )
+        if ( impl_->Write( obj.kTypeNameA, id, buf ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 쓰기 실패 (Id = {})" ),
+            Log::Inst().Write( loc, LogType::kError, kDB, _T( "디비 쓰기 실패 (Id = {})" ),
                 to_str( id ) );
             return false;
         }
@@ -71,20 +71,20 @@ public:
     }
 
     // 디비에서 객체를 읽는다.
-    template <SerialType T>
+    template <SerialType OBJ_T>
     bool Read(
-        const LocalDBId&  id,
-        T&                obj,
+        const DBId&       id,
+        OBJ_T&            obj,
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
         Buffer buf;
-        if ( impl_->Read( T::kTypeNameA, id, buf ) == false )
+        if ( impl_->Read( obj.kTypeNameA, id, buf ) == false )
             return false;
 
-        if ( BinSerializer::Read( buf, obj ) == false )
+        if ( T::Read( buf, obj ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "객체 버퍼 읽기 실패 (Id == {})" ),
+            Log::Inst().Write( loc, LogType::kError, kDB, _T( "객체 버퍼 읽기 실패 (Id == {})" ),
                 to_str( id ) );
             return false;
         }
@@ -92,16 +92,16 @@ public:
         return true;
     }
 
-    // 디비에서 값을 삭제한다.
-    template <SerialType T>
+    // 디비에서 삭제한다.
+    template <SerialType OBJ_T>
     bool Delete(
-        const LocalDBId&  id,
+        const DBId&       id,
         const SrcLocation loc = SrcLocation::current()
     ) const
     {
-        if ( impl_->Delete( T::kTypeNameA, id ) == false )
+        if ( impl_->Delete( OBJ_T::kTypeNameA, id ) == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "디비 삭제 실패 (Id == {})" ),
+            Log::Inst().Write( loc, LogType::kError, kDB, _T( "디비 삭제 실패 (Id == {})" ),
                 to_str( id ) );
             return false;
         }
@@ -111,47 +111,43 @@ public:
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Private (LocalDBTransaction)
+    // TODO: Private (DBTransaction)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    LocalDBTransImpl impl_;
+    DBTransImpl impl_;
 };
 
-// 로컬 디비를 구현한 클래스
-export class LocalDB final : private INoCopy
+// 디비를 구현한 클래스
+export template <typename T, DBImplType kImpl>
+class DB final : private INoCopy
 {
+public:
+    using Trans = DBTrans<T>;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Constructor & Destructor (LocalDB)
+    // TODO: Constructor & Destructor (DB)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    LocalDB() = default;
-    ~LocalDB() = default;
+    DB() = default;
+    ~DB() = default;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Public (LocalDB)
+    // TODO: Public (DB)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
     // 디비에 연결한다.
     bool Connect(
-        const LocalDBConfigInfo& config
+        const DBConfigInfo& config
     )
     {
         if ( config.IsValid() == false )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "설정이 유효하지 않음 (Table = {})" ),
-                config.db );
+            HU_LOG_ERROR( kDB, _T( "설정이 유효하지 않음 ({})" ), config.ToStr() );
             return false;
-        }
-        
-        if ( config_.dir.empty() == false )
-        {
-            const String dir_path { util::format_str( _T( "{}/{}/" ), util::get_cur_path_str(), config.dir ) };
-            if ( std::filesystem::exists( dir_path ) == false )
-                std::filesystem::create_directory( dir_path );
         }
 
         config_ = config;
@@ -159,15 +155,13 @@ public:
         impl_ = create_impl( config_ );
         if ( impl_ == nullptr )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "구현체 생성 실패 (Table = {}, Impl = {})" ),
-                config.db, LocalDBImplTypeInfo::ToStr( config.impl ) );
+            HU_LOG_ERROR( kDB, _T( "구현체 생성 실패 ({})" ), config.ToStr() );
             return false;
         }
 
-        if ( impl_->Open() == false )
+        if ( impl_->Connect() == false )
         {
-            HU_LOG_ERROR( kLocalDB, _T( "테이블 열기 실패 (Table = {})" ),
-                config.db );
+            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({})" ), config.ToStr() );
             return false;
         }
 
@@ -176,43 +170,52 @@ public:
 
     // 트랜잭션을 생성한다.
     bool CreateTrans(
-        LocalDBTrans&              trans,
-        const LocalDBCheckRollback check_rollback = nullptr,
-        const SrcLocation          loc = SrcLocation::current()
+        Trans&            trans,
+        const DBRollback  rollback = nullptr,
+        const SrcLocation loc = SrcLocation::current()
     ) const
     {
-        if ( trans.Init( impl_->CreateTrans( check_rollback ) ) == false )
+        if ( config_.create_trans == false )
         {
-            Log::Inst().Write( loc, LogType::kError, kLocalDB, _T( "트랜잭션 생성 실패 (Table == {})" ),
-                config_.db );
-            return false;
+            if ( trans.Init( impl_->CreateTrans( rollback ) ) )
+                return true;
         }
 
-        return true;
+        Log::Inst().Write( loc, LogType::kError, kDB, _T( "트랜잭션 생성 실패 ({})" ),
+            config_.ToStr() );
+        return false;
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Private (LocalDB)
+    // TODO: Private (DB)
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 private:
-    static LocalDBImpl create_impl(
-        const LocalDBConfigInfo& config
+    static DBImpl create_impl(
+        DBConfigInfo& config
     )
     {
+        if ( config.impl == DBImplType::kNone )
+            config.impl = kImpl;
+
         switch ( config.impl )
         {
-        case LocalDBImplType::kRocksDB:
+        case DBImplType::kRocksDB:
             return std::make_unique<RocksDB>( config );
+        case DBImplType::kMySQL:
+            return std::make_unique<MySQL>( config );
         }
 
         return nullptr;
     }
 
 private:
-    LocalDBConfigInfo config_;
-    LocalDBImpl       impl_;
+    DBConfigInfo config_;
+    DBImpl       impl_;
 };
+
+export using LDB = DB<BinSerializer, DBImplType::kRocksDB>;
+export using RDB = DB<JsonSerializer, DBImplType::kMySQL>;
 
 } // hu

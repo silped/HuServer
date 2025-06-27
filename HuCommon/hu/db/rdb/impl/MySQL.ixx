@@ -5,7 +5,7 @@
 // TODO: Import (MySQL)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.db.rdb.RDBType;
+import hu.db.DBType;
 
 import <memory>;
 import <mysqlx/xdevapi.h>;
@@ -22,7 +22,6 @@ namespace hu {
 using SQLError   = mysqlx::Error;
 using SQLSession = mysqlx::Session;
 using SQLDB      = mysqlx::Schema;
-using ParamType  = AString;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,20 +33,6 @@ String to_str(
 )
 {
     return util::format_str( _T( "SQLError = {}" ), util::utf8_to_str( e.what() ) );
-}
-
-ParamType to_param(
-    const String& str
-)
-{
-    return util::to_utf8( str );
-}
-
-ParamType to_param(
-    const Buffer& buffer
-)
-{
-    return ParamType( buffer.cbegin(), buffer.cend() );
 }
 
 
@@ -64,9 +49,6 @@ struct MySQLStateInfo final : private INoCopy
     // 디비 스키마
     std::unique_ptr<SQLDB> db;
 
-    // 트랜잭션 생성 여부
-    AtomBool create_trans { false };
-
     // 유효한지 검사한다.
     bool IsValid() const
     {
@@ -79,7 +61,7 @@ struct MySQLStateInfo final : private INoCopy
 // TODO: Class (MySQL)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class MySQLTrans final : public RDBTransBase
+class MySQLTrans final : public DBTransBase
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (MySQLTrans)
@@ -87,16 +69,15 @@ class MySQLTrans final : public RDBTransBase
 
 public:
     MySQLTrans(
-        const RDBConfigInfo&    config,
-        const RDBCheckRollback& check_rollback,
-        MySQLStateInfo&         state
+        const DBConfigInfo& config,
+        const DBRollback&   rollback,
+        MySQLStateInfo&     state
     ) :
-        RDBTransBase ( config, check_rollback ),
-        state_       ( state ),
-        session_     ( state.session.get() ),
-        db_          ( state.db.get() )
+        DBTransBase ( config, rollback ),
+        state_      ( state ),
+        session_    ( state.session.get() ),
+        db_         ( state.db.get() )
     {
-        state_.create_trans = true;
     }
 
     ~MySQLTrans()
@@ -105,18 +86,16 @@ public:
         {
             try
             {
-                if ( check_rollback_ && check_rollback_() )
+                if ( rollback_ && rollback_() )
                     session_->rollback();
                 else
                     session_->commit();
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kRDB, _T( "트랜잭션 완료 실패 ({})" ), to_str( e ) );
+                HU_LOG_ERROR( kDB, _T( "트랜잭션 완료 실패 ({})" ), to_str( e ) );
             }
         }
-
-        state_.create_trans = false;
     }
 
 
@@ -126,9 +105,9 @@ public:
 
 public:
     virtual bool Write(
-        const RDBTableName& table_name,
-        const RDBId&        id,
-        const Buffer&       buffer
+        const DBTableName& table_name,
+        const DBId&        id,
+        const Buffer&      buffer
     ) override
     {
         if ( check_table( table_name ) && check_trans() )
@@ -142,7 +121,7 @@ public:
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kRDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
+                HU_LOG_ERROR( kDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -154,9 +133,9 @@ public:
     }
 
     virtual bool Read(
-        const RDBTableName& table_name,
-        const RDBId&        id,
-        Buffer&             buffer
+        const DBTableName& table_name,
+        const DBId&        id,
+        Buffer&            buffer
     ) override
     {
         if ( check_table( table_name ) )
@@ -176,15 +155,15 @@ public:
                 std::stringstream ss;
                 ss << row[ 0 ];
 
-                auto value = ss.str();
-                util::remove_space( value );
+                auto param = ss.str();
+                util::remove_space( param );
 
-                buffer.assign( value.begin(), value.end() );
+                to_buffer( param, buffer );
                 return true;
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kRDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
+                HU_LOG_ERROR( kDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -198,8 +177,8 @@ public:
     }
 
     virtual bool Delete(
-        const RDBTableName& table_name,
-        const RDBId&        id
+        const DBTableName& table_name,
+        const DBId&        id
     ) override
     {
         if ( check_table( table_name ) && check_trans() )
@@ -218,7 +197,7 @@ public:
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kRDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
+                HU_LOG_ERROR( kDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -236,7 +215,7 @@ public:
 
 private:
     bool check_table(
-        const RDBTableName& table_name
+        const DBTableName& table_name
     )
     {
         if ( session_ )
@@ -250,7 +229,7 @@ private:
             session_ = nullptr;
         }
 
-        HU_LOG_ERROR( kRDB, _T( "테이블 검사 실패 (Table = {})" ),
+        HU_LOG_ERROR( kDB, _T( "테이블 검사 실패 (Table = {})" ),
             to_str( table_name ) );
         return false;
     }
@@ -268,7 +247,7 @@ private:
         }
         catch ( const SQLError& e )
         {
-            HU_LOG_ERROR( kRDB, _T( "트랜잭션 시작 실패 ({})" ),
+            HU_LOG_ERROR( kDB, _T( "트랜잭션 시작 실패 ({})" ),
                 to_str( e ) );
         }
 
@@ -283,7 +262,7 @@ private:
     bool            start_   { false };
 };
 
-export class MySQL final : public RDBBase
+export class MySQL final : public DBBase
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (MySQL)
@@ -291,9 +270,9 @@ export class MySQL final : public RDBBase
 
 public:
     explicit MySQL(
-        const RDBConfigInfo& config
+        const DBConfigInfo& config
     ) :
-        RDBBase( config )
+        DBBase( config )
     {
     }
 
@@ -323,7 +302,7 @@ public:
             // 테이블이 존재하지 않으면 생성한다.
             for ( const auto& table_name : config_.tables )
             {
-                mysqlx::Table table = state_.db->getTable( table_name );
+                auto table = state_.db->getTable( table_name );
                 if ( table.existsInDatabase() )
                     continue;
 
@@ -336,20 +315,17 @@ public:
         }
         catch ( const SQLError& e )
         {
-            HU_LOG_ERROR( kRDB, _T( "디비 연결 실패 ({}, {})" ), config_.ToStr(), to_str( e ) );
+            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({}, {})" ), config_.ToStr(), to_str( e ) );
         }
 
         return false;
     }
 
-    virtual RDBTransImpl CreateTrans(
-        const RDBCheckRollback& check_rollback
+    virtual DBTransImpl CreateTrans(
+        const DBRollback& rollback
     ) override
     {
-        if ( state_.create_trans )
-            return nullptr;
-
-        return std::make_unique<MySQLTrans>( config_, check_rollback, state_ );
+        return std::make_unique<MySQLTrans>( config_, rollback, state_ );
     }
 
 
