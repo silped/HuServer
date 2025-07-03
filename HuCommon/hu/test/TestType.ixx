@@ -57,9 +57,11 @@ export struct SerialInfo
         member.Clear();
     }
 
-    void Test( const SrcLocation location = SrcLocation::current() ) const
+    void Test(
+        const SrcLocation& loc = SrcLocation::current()
+    ) const
     {
-        util::log_ndebug( location, _T( "Id = {}, Data = {}, MemberData = {}" ),
+        util::log_ninfo( loc, _T( "Id = {}, Data = {}, MemberData = {}" ),
             id, data, member.data );
     }
 

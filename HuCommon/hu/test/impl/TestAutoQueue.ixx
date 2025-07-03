@@ -22,7 +22,7 @@ struct Info
 {
     void Test() const
     {
-        HU_LOG_NDEBUG( _T( "Test (ThreadId = {}, Id = {})" ), util::get_thread_id(), id );
+        HU_LOG_NINFO( _T( "Test (ThreadId = {}, Id = {})" ), util::get_thread_id(), id );
     }
 
     Int32 id { 0 };

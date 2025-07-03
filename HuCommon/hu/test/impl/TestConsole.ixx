@@ -41,11 +41,11 @@ export bool test_console()
     cs.WriteLn( _T( "言語設定 = {}" ), _T( "日本語" ) );
 
     // 이넘을 탐색해서 색상을 출력한다.
-    HU_STATIC_ASSERT( ColorTypeInfo::IsValid( -1 ) == false );
-    HU_STATIC_ASSERT( ColorTypeInfo::IsValid( 8 ) == false );
+    HU_STATIC_ASSERT( EColorInfo::IsValid( -1 ) == false );
+    HU_STATIC_ASSERT( EColorInfo::IsValid( 8 ) == false );
 
-    for ( const ColorType color : ColorTypeInfo::values )
-        cs.WriteLn( color, _T( "Color = {}" ), ColorTypeInfo::ToStr( color ) );
+    for ( const EColor color : EColorInfo::values )
+        cs.WriteLn( color, _T( "Color = {}" ), EColorInfo::ToStr( color ) );
 
     // 줄입력을 출력한다.
     //cs.Write( _T( "입력 : " ) );

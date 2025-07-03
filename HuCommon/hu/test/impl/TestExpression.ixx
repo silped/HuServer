@@ -100,9 +100,9 @@ export bool test_expression()
 
     // switch 문에서 초기화와 조건식 평가를 동시에 한다.
     // 변수의 영역을 한정 시켜 표현력을 좋게한다.
-    switch ( const ColorType color { ColorType::kWhite }; color )
+    switch ( const EColor color { EColor::kWhite }; color )
     {
-        using enum ColorType; // switch 문안에서 네이밍을 생략한다.
+        using enum EColor; // switch 문안에서 네이밍을 생략한다.
 
     case kBlack:
         HU_LOG_NDEBUG( _T( "color == black" ) );

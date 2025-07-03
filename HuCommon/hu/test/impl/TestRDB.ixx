@@ -28,11 +28,12 @@ export bool test_rdb()
     {
         DBConfigInfo conf;
         {
-            conf.db       = _T( "hu_db" );
-            conf.host     = _T( "localhost" );
-            conf.port     = 33060;
-            conf.user     = _T( "hu_user" );
-            conf.password = _T( "hu_user_pw" );
+            conf.debug_trans = true;
+            conf.db          = _T( "hu_db" );
+            conf.host        = _T( "localhost" );
+            conf.port        = 33060;
+            conf.user        = _T( "hu_user" );
+            conf.password    = _T( "hu_user_pw" );
 
             conf.AddTable<SerialInfo>();
         }
@@ -51,10 +52,10 @@ export bool test_rdb()
         HU_ASSERT_R( db.CreateTrans( trans2 ) == false );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( uuid1, objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid1, objr ) == EDBResult::kNotFound );
 
         SerialInfo objw { 1, _T( "데이터" ), _T( "멤버" ) };
-        HU_ASSERT_R( trans.Write( uuid1, objw ) );
+        HU_ASSERT_R( is_success( trans.Write( uuid1, objw ) ) );
     }
 
     // 디비에서 객체를 읽는다.
@@ -63,7 +64,7 @@ export bool test_rdb()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( uuid1, obj ) );
+        HU_ASSERT_R( is_success( trans.Read( uuid1, obj ) ) );
         obj.Test();
     }
 
@@ -71,7 +72,7 @@ export bool test_rdb()
     {
         MyDBTrans trans;
         HU_ASSERT_R( db.CreateTrans( trans ) );
-        HU_ASSERT_R( trans.Delete<SerialInfo>( uuid1 ) );
+        HU_ASSERT_R( is_success( trans.Delete<SerialInfo>( uuid1 ) ) );
     }
 
     const auto uuid2 = util::generate_uuid();
@@ -90,10 +91,10 @@ export bool test_rdb()
         HU_ASSERT_R( db.CreateTrans( trans, check_rollback ) );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( uuid2, objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, objr ) == EDBResult::kNotFound );
 
         SerialInfo objw { 2, _T( "데이터2" ), _T( "멤버2" ) };
-        HU_ASSERT_R( trans.Write( uuid2, objw ) );
+        HU_ASSERT_R( is_success( trans.Write( uuid2, objw ) ) );
 
         // 로직 검사를 실패로 설정한다.
         check_logic = false;
@@ -105,7 +106,7 @@ export bool test_rdb()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( uuid2, obj ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, obj ) == EDBResult::kNotFound );
     }
 
     return true;

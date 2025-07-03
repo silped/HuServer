@@ -1,4 +1,4 @@
-﻿export module hu.test.impl.TestNoSQLDB;
+﻿export module hu.test.impl.TestNoSQL;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7,25 +7,25 @@
 
 import hu.test.TestType;
 
-import "hu/db/nosql/NoSQLDB.hpp";
+import "hu/db/nosql/NoSQL.hpp";
 
 
 using namespace hu;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Function (TestNoSQLDB)
+// TODO: Function (TestNoSQL)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export bool test_nosql_db()
+export bool test_nosql()
 {
     // 디비 연결을 설정한다.
-    NoSQLDBConfigInfo conf;
+    NoSQLConfigInfo conf;
     {
         conf.db       = _T( "Game" );
         conf.user     = _T( "hu" );
         conf.password = _T( "pRaZTD3dR8wUUnS5" );
         conf.host     = _T( "cluster0.tbcuy4j.mongodb.net" );
-        conf.impl     = NoSQLDBImplType::kMongoDB;
+        conf.impl     = ENoSQLImpl::kMongoDB;
 
         HU_ASSERT_R( conf.AddOption( _T( "retryWrites" ), _T( "true" ) ) );
         HU_ASSERT_R( conf.AddOption( _T( "w" ), _T( "majority" ) ) );
@@ -37,7 +37,7 @@ export bool test_nosql_db()
     HU_LOG_NDEBUG( _T( "URI = {}" ), conf.GetUri() );
 
     // 디비에 연결한다.
-    NoSQLDB db;
+    NoSQL db;
     HU_ASSERT_R( db.Connect( conf ) );
 
     const auto uuid1 = util::generate_uuid();
@@ -45,7 +45,7 @@ export bool test_nosql_db()
     // 객체를 쓴다.
     {
         SerialInfo obj;
-        HU_ASSERT_R( db.Read( uuid1, obj ) == false );
+        HU_ASSERT_R( db.Read( uuid1, obj ) == ENoSQLResult::kNotFound );
 
         obj.id          = 1;
         obj.data        = util::to_str( uuid1 );
@@ -57,7 +57,7 @@ export bool test_nosql_db()
     // 객체를 읽는다.
     {
         SerialInfo obj;
-        HU_ASSERT_R( db.Read( uuid1, obj ) );
+        HU_ASSERT_R( db.Read( uuid1, obj ) == ENoSQLResult::kSuccess );
         obj.Test();
 
         HU_ASSERT_R( obj.id == 1 );
@@ -79,7 +79,7 @@ export bool test_nosql_db()
 
     // 객체 목록을 읽는다.
     {
-        std::map<NoSQLDBId, SerialInfo> obj_map;
+        std::map<NoSQLId, SerialInfo> obj_map;
         HU_ASSERT_R( db.ReadList( { uuid1, uuid2 }, obj_map ) == 2 );
 
         for ( const auto& [ id, obj ] : obj_map )
@@ -88,12 +88,12 @@ export bool test_nosql_db()
 
     // 데이터를 지운다.
     {
-        HU_ASSERT_R( db.Delete<SerialInfo>( uuid1 ) );
-        HU_ASSERT_R( db.Delete<SerialInfo>( uuid2 ) );
+        HU_ASSERT_R( db.Delete<SerialInfo>( uuid1 ) == ENoSQLResult::kSuccess );
+        HU_ASSERT_R( db.Delete<SerialInfo>( uuid2 ) == ENoSQLResult::kSuccess );
 
         SerialInfo obj;
-        HU_ASSERT_R( db.Read( uuid1, obj ) == false );
-        HU_ASSERT_R( db.Read( uuid2, obj ) == false );
+        HU_ASSERT_R( db.Read( uuid1, obj ) == ENoSQLResult::kNotFound );
+        HU_ASSERT_R( db.Read( uuid2, obj ) == ENoSQLResult::kNotFound );
     }
 
     return true;

@@ -32,7 +32,8 @@ String to_str(
     const SQLError& e
 )
 {
-    return util::format_str( _T( "SQLError = {}" ), util::utf8_to_str( e.what() ) );
+    return util::format_str( _T( "SQLError = {}" ),
+        util::utf8_to_str( e.what() ) );
 }
 
 
@@ -71,9 +72,10 @@ public:
     MySQLTrans(
         const DBConfigInfo& config,
         const DBRollback&   rollback,
+        const SrcLocation&  loc,
         MySQLStateInfo&     state
     ) :
-        DBTransBase ( config, rollback ),
+        DBTransBase ( config, rollback, loc ),
         state_      ( state ),
         session_    ( state.session.get() ),
         db_         ( state.db.get() )
@@ -93,7 +95,8 @@ public:
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kDB, _T( "트랜잭션 완료 실패 ({})" ), to_str( e ) );
+                util::log_error( loc_, kDB, _T( "트랜잭션 완료 실패 ({})" ),
+                    to_str( e ) );
             }
         }
     }
@@ -104,24 +107,25 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 public:
-    virtual bool Write(
+    virtual EDBResult Write(
         const DBTableName& table_name,
         const DBId&        id,
-        const Buffer&      buffer
+        const Buffer&      buffer,
+        const SrcLocation& loc
     ) override
     {
-        if ( check_table( table_name ) && check_trans() )
+        if ( check_table( table_name, loc ) && check_trans( loc ) )
         {
             static const AString kQuery { "INSERT INTO {} (id, value) VALUES (?, ?) AS NEW_VALUES ON DUPLICATE KEY UPDATE value = NEW_VALUES.value" };
 
             try
             {
                 session_->sql( util::format_str( kQuery, table_name ) ).bind( id, to_param( buffer ) ).execute();
-                return true;
+                return EDBResult::kSuccess;
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kDB, _T( "디비 쓰기 실패 (Table = {}, Id = {}, {})" ),
+                util::log_error( loc, kDB, _T( "DB 오류 발생 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -129,16 +133,19 @@ public:
             session_ = nullptr;
         }
 
-        return false;
+        util::log_error( loc, kDB, _T( "DB 쓰기 실패 (Table = {}, Id = {})" ),
+            to_str( table_name ), to_str( id ) );
+        return EDBResult::kFailToNative;
     }
 
-    virtual bool Read(
+    virtual EDBResult Read(
         const DBTableName& table_name,
         const DBId&        id,
-        Buffer&            buffer
+        Buffer&            buffer,
+        const SrcLocation& loc
     ) override
     {
-        if ( check_table( table_name ) )
+        if ( check_table( table_name, loc ) )
         {
             try
             {
@@ -150,7 +157,7 @@ public:
 
                 auto row = result.fetchOne();
                 if ( row.isNull() )
-                    return false;
+                    return EDBResult::kNotFound;
 
                 std::stringstream ss;
                 ss << row[ 0 ];
@@ -159,11 +166,11 @@ public:
                 util::remove_space( param );
 
                 to_buffer( param, buffer );
-                return true;
+                return EDBResult::kSuccess;
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kDB, _T( "디비 읽기 실패 (Table = {}, Id = {}, {})" ),
+                util::log_error( loc, kDB, _T( "DB 오류 발생 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -173,31 +180,36 @@ public:
             session_ = nullptr;
         }
 
-        return false;
+        util::log_error( loc, kDB, _T( "DB 읽기 실패 (Table = {}, Id = {})" ),
+            to_str( table_name ), to_str( id ) );
+        return EDBResult::kFailToNative;
     }
 
-    virtual bool Delete(
+    virtual EDBResult Delete(
         const DBTableName& table_name,
-        const DBId&        id
+        const DBId&        id,
+        const SrcLocation& loc
     ) override
     {
-        if ( check_table( table_name ) && check_trans() )
+        if ( check_table( table_name, loc ) && check_trans( loc ) )
         {
             try
             {
                 auto table = db_->getTable( table_name );
-                if ( table.remove().
+
+                const auto del_count = table.remove().
                     where( "id = :param" ).
                     bind( "param", id ).
                     execute().
-                    getAffectedItemsCount() > 0 )
-                {
-                    return true;
-                }
+                    getAffectedItemsCount();
+                if ( del_count == 0 )
+                    return EDBResult::kNotFound;
+
+                return EDBResult::kSuccess;
             }
             catch ( const SQLError& e )
             {
-                HU_LOG_ERROR( kDB, _T( "디비 삭제 실패 (Table = {}, Id = {}, {})" ),
+                util::log_error( loc, kDB, _T( "DB 오류 발생 (Table = {}, Id = {}, {})" ),
                     to_str( table_name ), to_str( id ), to_str( e ) );
             }
 
@@ -205,7 +217,9 @@ public:
             session_ = nullptr;
         }
 
-        return false;
+        util::log_error( loc, kDB, _T( "DB 삭제 실패 (Table = {}, Id = {})" ),
+            to_str( table_name ), to_str( id ) );
+        return EDBResult::kFailToNative;
     }
 
 
@@ -215,7 +229,8 @@ public:
 
 private:
     bool check_table(
-        const DBTableName& table_name
+        const DBTableName& table_name,
+        const SrcLocation& loc
     )
     {
         if ( session_ )
@@ -229,12 +244,14 @@ private:
             session_ = nullptr;
         }
 
-        HU_LOG_ERROR( kDB, _T( "테이블 검사 실패 (Table = {})" ),
+        util::log_error( loc, kDB, _T( "테이블 검사 실패 (Table = {})" ),
             to_str( table_name ) );
         return false;
     }
 
-    bool check_trans()
+    bool check_trans(
+        const SrcLocation& loc
+    )
     {
         if ( start_ )
             return true;
@@ -247,7 +264,7 @@ private:
         }
         catch ( const SQLError& e )
         {
-            HU_LOG_ERROR( kDB, _T( "트랜잭션 시작 실패 ({})" ),
+            util::log_error( loc, kDB, _T( "DB 오류 발생 ({})" ),
                 to_str( e ) );
         }
 
@@ -306,26 +323,28 @@ public:
                 if ( table.existsInDatabase() )
                     continue;
 
-                static const AString kQuery { "CREATE TABLE {} (id CHAR(36) NOT NULL, value JSON NOT NULL, PRIMARY KEY( id )) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci" };
+                static const AString kQuery { "CREATE TABLE {} (id CHAR({}) NOT NULL, value JSON NOT NULL, PRIMARY KEY( id )) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci" };
 
-                state_.session->sql( util::format_str( kQuery, table_name ) ).execute();
+                state_.session->sql( util::format_str( kQuery, table_name, kUUIdSize ) ).execute();
             }
 
             return true;
         }
         catch ( const SQLError& e )
         {
-            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({}, {})" ), config_.ToStr(), to_str( e ) );
+            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({}, {})" ),
+                config_.ToStr(), to_str( e ) );
         }
 
         return false;
     }
 
     virtual DBTransImpl CreateTrans(
-        const DBRollback& rollback
+        const DBRollback&  rollback,
+        const SrcLocation& loc
     ) override
     {
-        return std::make_unique<MySQLTrans>( config_, rollback, state_ );
+        return std::make_unique<MySQLTrans>( config_, rollback, loc, state_ );
     }
 
 

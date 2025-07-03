@@ -5,7 +5,7 @@
 // TODO: Import (MongoDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import hu.db.nosql.NoSQLDBType;
+import hu.db.nosql.NoSQLType;
 
 import <bsoncxx/json.hpp>;
 import <mongocxx/client.hpp>;
@@ -24,7 +24,7 @@ namespace Bson = bsoncxx::builder::basic;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // MongoDB를 사용해서 구현한 로컬 디비 클래스
-export class MongoDB final : public NoSQLDBBase
+export class MongoDB final : public NoSQLBase
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Constructor & Destructor (MongoDB)
@@ -32,9 +32,9 @@ export class MongoDB final : public NoSQLDBBase
 
 public:
     explicit MongoDB(
-        const NoSQLDBConfigInfo& config
+        const NoSQLConfigInfo& config
     ) :
-        NoSQLDBBase( config )
+        NoSQLBase( config )
     {
     }
 
@@ -71,7 +71,7 @@ public:
         }
         catch ( const std::exception& e )
         {
-            HU_LOG_ERROR( kNoSQLDB, _T( "연결 실패 (Uri = {}, Error = {})" ),
+            HU_LOG_ERROR( kNoSQL, _T( "연결 실패 (Uri = {}, Error = {})" ),
                 uri_str, to_str( e.what() ) );
         }
 
@@ -80,8 +80,9 @@ public:
 
     virtual bool Write(
         const NoSQLTableName& table,
-        const NoSQLDBId&      id,
-        const Buffer&         buffer
+        const NoSQLId&        id,
+        const Buffer&         buffer,
+        const SrcLocation&    loc
     ) override
     {
         if ( table.empty() || id.empty() || buffer.empty() )
@@ -100,51 +101,55 @@ public:
         }
         catch ( const std::exception& e )
         {
-            HU_LOG_ERROR( kNoSQLDB, _T( "쓰기 실패 (Table = {}, Id = {}, Error = {}" ),
+            util::log_error( loc, kNoSQL, _T( "쓰기 실패 (Table = {}, Id = {}, Error = {}" ),
                 to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
         return false;
     }
 
-    virtual bool Read(
+    virtual ENoSQLResult Read(
         const NoSQLTableName& table,
-        const NoSQLDBId&      id,
-        Buffer&               buffer
+        const NoSQLId&        id,
+        Buffer&               buffer,
+        const SrcLocation&    loc
     ) override
     {
-        if ( table.empty() || id.empty() )
-            return false;
-
         try
         {
-            if ( db_.has_collection( table ) == false )
-                return false;
-
-            auto coll = db_[ table ];
-
-            const auto res = coll.find_one( Bson::make_document( Bson::kvp( kId, id ) ) );
-            if ( res )
+            if ( db_.has_collection( table ) )
             {
-                auto json = bsoncxx::to_json( *res );
-                util::remove_space( json );
-                buffer.assign( json.cbegin(), json.cend() );
-                return true;
+                auto coll = db_[ table ];
+
+                const auto res = coll.find_one( Bson::make_document( Bson::kvp( kId, id ) ) );
+                if ( res )
+                {
+                    auto json = bsoncxx::to_json( *res );
+                    util::remove_space( json );
+                    buffer.assign( json.cbegin(), json.cend() );
+
+                    return ENoSQLResult::kSuccess;
+                }
+                else
+                {
+                    return ENoSQLResult::kNotFound;
+                }
             }
         }
         catch ( const std::exception& e )
         {
-            HU_LOG_ERROR( kNoSQLDB, _T( "읽기 실패 (Table = {}, Id = {}, Error = {})" ),
+            util::log_error( loc, kNoSQL, _T( "읽기 실패 (Table = {}, Id = {}, Error = {})" ),
                 to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
-        return false;
+        return ENoSQLResult::kFail;
     }
 
     virtual Size ReadList(
         const NoSQLTableName& table,
-        const NoSQLDBIdSet&   id_set,
-        NoSQLReadListResult&  result
+        const NoSQLIdSet&     id_set,
+        NoSQLReadListResult&  result,
+        const SrcLocation&    loc
     ) override
     {
         if ( table.empty() || id_set.empty() )
@@ -173,39 +178,39 @@ public:
         }
         catch ( const std::exception& e )
         {
-            HU_LOG_ERROR( kNoSQLDB, _T( "목록 읽기 실패 (Table = {}, Error = {})" ),
+            util::log_error( loc, kNoSQL, _T( "목록 읽기 실패 (Table = {}, Error = {})" ),
                 to_str( table ), to_str( e.what() ) );
         }
 
         return 0;
     }
 
-    virtual bool Delete(
+    virtual ENoSQLResult Delete(
         const NoSQLTableName& table,
-        const NoSQLDBId&      id
+        const NoSQLId&        id,
+        const SrcLocation&    loc
     ) override
     {
-        if ( table.empty() || id.empty() )
-            return false;
-
         try
         {
-            if ( db_.has_collection( table ) == false )
-                return false;
+            if ( db_.has_collection( table ) )
+            {
+                auto coll = db_[ table ];
 
-            auto coll = db_[ table ];
-
-            auto res = coll.delete_one( Bson::make_document( Bson::kvp( kId, id ) ) );
-            if ( res && ( res->deleted_count() > 0 ) )
-                return true;
+                auto res = coll.delete_one( Bson::make_document( Bson::kvp( kId, id ) ) );
+                if ( res && ( res->deleted_count() > 0 ) )
+                    return ENoSQLResult::kSuccess;
+                else
+                    return ENoSQLResult::kNotFound;
+            }
         }
         catch ( const std::exception& e )
         {
-            HU_LOG_ERROR( kNoSQLDB, _T( "삭제 실패 (Table = {}, Id = {}, Error = {})" ),
+            util::log_error( loc, kNoSQL, _T( "삭제 실패 (Table = {}, Id = {}, Error = {})" ),
                 to_str( table ), to_str( id ), to_str( e.what() ) );
         }
 
-        return false;
+        return ENoSQLResult::kFail;
     }
 
 

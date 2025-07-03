@@ -1,8 +1,8 @@
-﻿export module hu.test.impl.TestLocalDB;
+﻿export module hu.test.impl.TestLDB;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Import (TestLocalDB)
+// TODO: Import (TestLDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import hu.test.TestType;
@@ -13,10 +13,10 @@ import "hu/db/DB.hpp";
 using namespace hu;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: Function (TestLocalDB)
+// TODO: Function (TestLDB)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export bool test_local_db()
+export bool test_ldb()
 {
     using MyDB      = LDB;
     using MyDBTrans = MyDB::Trans;
@@ -28,9 +28,16 @@ export bool test_local_db()
     {
         DBConfigInfo conf;
         {
+            // 트랜잭션 디버깅 활성화
+            conf.debug_trans = true;
+
+            // 디비 이름 설정
             conf.db  = _T( "hu_db" );
+
+            // 디비 저장 디렉터리 설정
             conf.dir = _T( "_db" );
 
+            // 테이블 정보 설정
             conf.AddTable<SerialInfo>();
         }
         HU_ASSERT_R( db.Connect( conf ) );
@@ -48,10 +55,10 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans2 ) == false );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( uuid1, objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid1, objr ) == EDBResult::kNotFound );
 
         SerialInfo objw { 1, _T( "데이터" ), _T( "멤버" ) };
-        HU_ASSERT_R( trans.Write( uuid1, objw ) );
+        HU_ASSERT_R( is_success( trans.Write( uuid1, objw ) ) );
     }
 
     // 디비에서 객체를 읽는다.
@@ -60,7 +67,7 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( uuid1, obj ) );
+        HU_ASSERT_R( is_success( trans.Read( uuid1, obj ) ) );
         obj.Test();
     }
 
@@ -68,7 +75,7 @@ export bool test_local_db()
     {
         MyDBTrans trans;
         HU_ASSERT_R( db.CreateTrans( trans ) );
-        HU_ASSERT_R( trans.Delete<SerialInfo>( uuid1 ) );
+        HU_ASSERT_R( is_success( trans.Delete<SerialInfo>( uuid1 ) ) );
     }
 
     const auto uuid2 = util::generate_uuid();
@@ -87,10 +94,10 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans, check_rollback ) );
 
         SerialInfo objr;
-        HU_ASSERT_R( trans.Read( uuid2, objr ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, objr ) == EDBResult::kNotFound );
 
         SerialInfo objw { 2, _T( "데이터2" ), _T( "멤버2" ) };
-        HU_ASSERT_R( trans.Write( uuid2, objw ) );
+        HU_ASSERT_R( is_success( trans.Write( uuid2, objw ) ) );
 
         // 로직 검사를 실패로 설정한다.
         check_logic = false;
@@ -102,7 +109,7 @@ export bool test_local_db()
         HU_ASSERT_R( db.CreateTrans( trans ) );
 
         SerialInfo obj;
-        HU_ASSERT_R( trans.Read( uuid2, obj ) == false );
+        HU_ASSERT_R( trans.Read( uuid2, obj ) == EDBResult::kNotFound );
     }
 
     return true;

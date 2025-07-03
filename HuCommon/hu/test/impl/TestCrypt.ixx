@@ -20,7 +20,7 @@ using namespace hu;
 export bool test_crypt()
 {
     CryptConfigInfo config;
-    config.crypt_impl = CryptImplType::kBotanPk;
+    config.crypt_impl = ECryptImpl::kBotanPk;
 
     // 송신자 공개키를 생성한다.
     Crypt send_crypt { config };

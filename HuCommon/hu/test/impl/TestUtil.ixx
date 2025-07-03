@@ -16,6 +16,30 @@ using namespace hu;
 
 export bool test_util()
 {
+    // 문자열을 분할한다.
+    {
+        const AString str = "cmd 1 20 300";
+        const auto strs = util::split_str( str );
+
+        HU_ASSERT_R( strs.size() == 4 );
+        HU_ASSERT_R( strs[ 0 ] == "cmd" );
+        HU_ASSERT_R( strs[ 1 ] == "1" );
+        HU_ASSERT_R( strs[ 2 ] == "20" );
+        HU_ASSERT_R( strs[ 3 ] == "300" );
+    }
+
+    // 문자열을 분할한다.
+    {
+        const WString str = L"cmd,1,20,300";
+        const auto strs = util::split_str( str, L"," );
+
+        HU_ASSERT_R( strs.size() == 4 );
+        HU_ASSERT_R( strs[ 0 ] == L"cmd" );
+        HU_ASSERT_R( strs[ 1 ] == L"1" );
+        HU_ASSERT_R( strs[ 2 ] == L"20" );
+        HU_ASSERT_R( strs[ 3 ] == L"300" );
+    }
+
     // 문자열 공백을 제거한다.
     {
         AString str = " a b\tc\nd e f ";
@@ -43,6 +67,12 @@ export bool test_util()
 
     // 현재 UTC 사용자 지정 시간 문자열을 얻는다.
     HU_LOG_NDEBUG( _T( "UTC Time Format = {}" ), util::get_utc_time_str( _T( "{:%Y-%m-%d_%H-%M-%OS}" ) ) );
+
+    // 시간을 숫자로 변환한다.
+    const auto now_num = util::to_time_num();
+    HU_LOG_NDEBUG( _T( "NowNum = {}" ), now_num );
+    const auto now2 = util::to_time_point( now_num );
+    HU_LOG_NDEBUG( _T( "Now2 = {}" ), util::get_local_time_str( now2 ) );
 
     // 현재 프로세스 실행 경로를 얻는다.
     HU_LOG_NDEBUG( util::get_cur_path_str() );

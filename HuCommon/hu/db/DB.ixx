@@ -40,73 +40,84 @@ public:
         if ( impl == nullptr )
             return false;
 
-        impl_ = std::move( impl );
+        impl_  = std::move( impl );
+        debug_ = impl_->IsDebug();
+
         return true;
     }
 
     // 디비에 객체를 쓴다.
-    template <SerialType OBJ_T>
-    bool Write(
-        const DBId&       id,
-        const OBJ_T&      obj,
-        const SrcLocation loc = SrcLocation::current()
+    template <SerialType ST>
+    EDBResult Write(
+        const DBId&        id,
+        const ST&          obj,
+        const SrcLocation& loc = SrcLocation::current()
     ) const
     {
         Buffer buf;
-        if ( T::Write( obj, buf ) == false )
+        if ( T::Write( obj, buf, loc ) == false )
+            return EDBResult::kFailToSerial;
+
+        const auto res = impl_->Write( obj.kTypeNameA, id, buf, loc );
+        if ( res == EDBResult::kSuccess )
         {
-            Log::Inst().Write( loc, LogType::kError, kDB, _T( "객체 버퍼 쓰기 실패 (Id == {})" ),
-                to_str( id ) );
-            return false;
+            if ( debug_ )
+                util::log_debug( obj.kTypeName, util::to_str( obj ), loc );
         }
 
-        if ( impl_->Write( obj.kTypeNameA, id, buf ) == false )
-        {
-            Log::Inst().Write( loc, LogType::kError, kDB, _T( "디비 쓰기 실패 (Id = {})" ),
-                to_str( id ) );
-            return false;
-        }
+        return res;
+    }
 
-        return true;
+    // 디비에 객체를 쓴다.
+    template <SerialType ST>
+    EDBResult Write(
+        const ST&          obj,
+        const SrcLocation& loc = SrcLocation::current()
+    ) const
+    {
+        return Write( obj.id, obj, loc );
     }
 
     // 디비에서 객체를 읽는다.
-    template <SerialType OBJ_T>
-    bool Read(
-        const DBId&       id,
-        OBJ_T&            obj,
-        const SrcLocation loc = SrcLocation::current()
+    template <SerialType ST>
+    EDBResult Read(
+        const DBId&        id,
+        ST&                obj,
+        const SrcLocation& loc = SrcLocation::current()
     ) const
     {
         Buffer buf;
-        if ( impl_->Read( obj.kTypeNameA, id, buf ) == false )
-            return false;
-
-        if ( T::Read( buf, obj ) == false )
+        const auto res = impl_->Read( obj.kTypeNameA, id, buf, loc );
+        if ( res == EDBResult::kSuccess )
         {
-            Log::Inst().Write( loc, LogType::kError, kDB, _T( "객체 버퍼 읽기 실패 (Id == {})" ),
-                to_str( id ) );
-            return false;
+            if ( T::Read( buf, obj, loc ) == false )
+                return EDBResult::kFailToSerial;
+
+            if ( debug_ )
+                util::log_debug( obj.kTypeName, util::to_str( obj ), loc );
         }
 
-        return true;
+        return res;
+    }
+
+    // 디비에서 객체를 읽는다.
+    template <SerialType ST>
+    EDBResult Read(
+        ST&                obj,
+        const SrcLocation& loc = SrcLocation::current()
+    ) const
+    {
+        return Read( obj.id, obj, loc );
     }
 
     // 디비에서 삭제한다.
-    template <SerialType OBJ_T>
-    bool Delete(
-        const DBId&       id,
-        const SrcLocation loc = SrcLocation::current()
+    template <SerialType ST>
+    EDBResult Delete(
+        const DBId&        id,
+        const SrcLocation& loc = SrcLocation::current()
     ) const
     {
-        if ( impl_->Delete( OBJ_T::kTypeNameA, id ) == false )
-        {
-            Log::Inst().Write( loc, LogType::kError, kDB, _T( "디비 삭제 실패 (Id == {})" ),
-                to_str( id ) );
-            return false;
-        }
-
-        return true;
+        return impl_->Delete( ST::kTypeNameA, id, loc );
     }
 
 
@@ -116,10 +127,11 @@ public:
 
 private:
     DBTransImpl impl_;
+    bool        debug_ { false };
 };
 
 // 디비를 구현한 클래스
-export template <typename T, DBImplType kImpl>
+export template <typename T, EDBImpl kImpl>
 class DB final : private INoCopy
 {
 public:
@@ -146,7 +158,8 @@ public:
     {
         if ( config.IsValid() == false )
         {
-            HU_LOG_ERROR( kDB, _T( "설정이 유효하지 않음 ({})" ), config.ToStr() );
+            HU_LOG_ERROR( kDB, _T( "설정이 유효하지 않음 ({})" ),
+                config.ToStr() );
             return false;
         }
 
@@ -155,13 +168,15 @@ public:
         impl_ = create_impl( config_ );
         if ( impl_ == nullptr )
         {
-            HU_LOG_ERROR( kDB, _T( "구현체 생성 실패 ({})" ), config.ToStr() );
+            HU_LOG_ERROR( kDB, _T( "구현체 생성 실패 ({})" ),
+                config.ToStr() );
             return false;
         }
 
         if ( impl_->Connect() == false )
         {
-            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({})" ), config.ToStr() );
+            HU_LOG_ERROR( kDB, _T( "디비 연결 실패 ({})" ),
+                config.ToStr() );
             return false;
         }
 
@@ -170,20 +185,45 @@ public:
 
     // 트랜잭션을 생성한다.
     bool CreateTrans(
-        Trans&            trans,
-        const DBRollback  rollback = nullptr,
-        const SrcLocation loc = SrcLocation::current()
+        Trans&             trans,
+        const DBRollback   rollback = nullptr,
+        const SrcLocation& loc = SrcLocation::current()
     ) const
     {
         if ( config_.create_trans == false )
         {
-            if ( trans.Init( impl_->CreateTrans( rollback ) ) )
+            if ( trans.Init( impl_->CreateTrans( rollback, loc ) ) )
                 return true;
         }
 
-        Log::Inst().Write( loc, LogType::kError, kDB, _T( "트랜잭션 생성 실패 ({})" ),
+        util::log_error( loc, kDB, _T( "트랜잭션 생성 실패 ({})" ),
             config_.ToStr() );
         return false;
+    }
+
+    // 단일 트랜잭션으로 디비에 객체를 쓴다.
+    template <SerialType ST>
+    EDBResult WriteOne(
+        const DBId&        id,
+        const ST&          obj,
+        const SrcLocation& loc = SrcLocation::current()
+    ) const
+    {
+        Trans trans;
+        if ( CreateTrans( trans, nullptr, loc ) == false )
+            return EDBResult::kFailToTrans;
+
+        return trans.Write( id, obj, loc );
+    }
+
+    // 단일 트랜잭션으로 디비에 객체를 쓴다.
+    template <SerialType ST>
+    EDBResult WriteOne(
+        const ST&          obj,
+        const SrcLocation& loc = SrcLocation::current()
+    ) const
+    {
+        return WriteOne( obj.id, obj, loc );
     }
 
 
@@ -196,14 +236,14 @@ private:
         DBConfigInfo& config
     )
     {
-        if ( config.impl == DBImplType::kNone )
+        if ( config.impl == EDBImpl::kNone )
             config.impl = kImpl;
 
         switch ( config.impl )
         {
-        case DBImplType::kRocksDB:
+        case EDBImpl::kRocksDB:
             return std::make_unique<RocksDB>( config );
-        case DBImplType::kMySQL:
+        case EDBImpl::kMySQL:
             return std::make_unique<MySQL>( config );
         }
 
@@ -215,7 +255,7 @@ private:
     DBImpl       impl_;
 };
 
-export using LDB = DB<BinSerializer, DBImplType::kRocksDB>;
-export using RDB = DB<JsonSerializer, DBImplType::kMySQL>;
+export using LDB = DB<BinSerializer, EDBImpl::kRocksDB>;
+export using RDB = DB<JsonSerializer, EDBImpl::kMySQL>;
 
 } // hu

@@ -255,7 +255,7 @@
     <ClCompile Include="hu\test\impl\TestExpression.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
-    <ClCompile Include="hu\test\impl\TestLocalDB.ixx">
+    <ClCompile Include="hu\test\impl\TestLDB.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
     <ClCompile Include="hu\test\impl\TestLog.ixx">
@@ -348,16 +348,16 @@
     <ClCompile Include="hu\test\impl\TestSystem.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
-    <ClCompile Include="hu\db\nosql\NoSQLDB.ixx">
+    <ClCompile Include="hu\db\nosql\NoSQL.ixx">
       <Filter>hu\db\nosql</Filter>
     </ClCompile>
-    <ClCompile Include="hu\db\nosql\NoSQLDBType.ixx">
+    <ClCompile Include="hu\db\nosql\NoSQLType.ixx">
       <Filter>hu\db\nosql</Filter>
     </ClCompile>
     <ClCompile Include="hu\db\nosql\impl\MongoDB.ixx">
       <Filter>hu\db\nosql\impl</Filter>
     </ClCompile>
-    <ClCompile Include="hu\test\impl\TestNoSQLDB.ixx">
+    <ClCompile Include="hu\test\impl\TestNoSQL.ixx">
       <Filter>hu\test\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\_external\vcpkg-master\installed\x64-windows\include\yas\detail\io\header.cpp">
@@ -416,7 +416,7 @@
     <ClInclude Include="hu\system\impl\WinSystem.hpp">
       <Filter>hu\system\impl</Filter>
     </ClInclude>
-    <ClInclude Include="hu\db\nosql\NoSQLDB.hpp">
+    <ClInclude Include="hu\db\nosql\NoSQL.hpp">
       <Filter>hu\db\nosql</Filter>
     </ClInclude>
     <ClInclude Include="hu\db\DB.hpp">
